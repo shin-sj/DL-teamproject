@@ -1,6 +1,16 @@
 venv/
+.venv/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .DS_Store
 .cache/
+
+# Claude Code 임시
+.claude/
+
+# 학습 산출물 (재학습 가능, 결과 JSON에 점수 다 있음)
+checkpoints/
+
+# 학습 로그 (JSON history에 epoch별 metric 동일하게 들어있음)
+results/log_*.txt

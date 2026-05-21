@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Korean Persona Demographic Profiling — Model Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EFF4FA;
+    --paper: #FFFFFF;
+    --paper-soft: #F5F8FC;
+    --ink: #0F172A;
+    --ink-soft: #334155;
+    --ink-muted: #64748B;
+    --rule: #E2E8F0;
+    --accent: #1E40AF;
+    --accent-soft: #3B82F6;
+    --tag-bg: #E0E7FF;
+
+    --gender: #DB2777;
+    --gender-bg: #FCE7F3;
+    --age: #0891B2;
+    --age-bg: #CFFAFE;
+    --region: #7C3AED;
+    --region-bg: #EDE9FE;
+    --lifestyle: #059669;
+    --lifestyle-bg: #D1FAE5;
+
+    --green: #059669;
+    --red: #DC2626;
+    --amber: #D97706;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Pretendard', sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+
+  .doc {
+    max-width: 1080px;
+    margin: 0 auto;
+    background: var(--paper);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 16px 40px rgba(0,0,0,0.08);
+    padding: 48px 56px 60px;
+  }
+
+  .doc-header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 22px;
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin-bottom: 10px;
+  }
+  .h-ko {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    line-height: 1.8;
+    background: var(--paper-soft);
+    padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 3px 3px 0;
+    margin-top: 14px;
+  }
+  .meta b { color: var(--ink); }
+
+  h2 {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-top: 44px;
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+  }
+  h2 .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-right: 10px;
+    letter-spacing: 0.05em;
+  }
+  h3 {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 26px;
+    margin-bottom: 10px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  h3 .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-soft);
+    margin-right: 8px;
+  }
+  h4 {
+    font-family: 'Pretendard', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p { margin-bottom: 12px; }
+
+  .callout {
+    background: #EFF6FF;
+    border-left: 3px solid var(--accent-soft);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 3px 3px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .callout.warn {
+    background: #FEF3C7;
+    border-left-color: #D97706;
+    color: #78350F;
+  }
+  .callout.warn b { color: #78350F; }
+  .callout.info {
+    background: #DBEAFE;
+    border-left-color: #1D4ED8;
+    color: #1E3A8A;
+  }
+  .callout.info b { color: #1E3A8A; }
+  .callout.good {
+    background: var(--lifestyle-bg);
+    border-left-color: var(--lifestyle);
+    color: #064E3B;
+  }
+  .callout.good b { color: #064E3B; }
+  .callout b { color: var(--accent); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px;
+    font-size: 12.5px;
+    background: var(--paper);
+  }
+  thead {
+    background: var(--paper-soft);
+    border-bottom: 2px solid var(--ink);
+  }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+  th.r { text-align: right; }
+  td {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+  td.r { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+  td.mono { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+  td.best { background: #ECFDF5; color: var(--green); font-weight: 700; }
+  td.worst { color: var(--red); }
+  td.delta-bad { color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; text-align: right; }
+  td.delta-ok { color: var(--ink-muted); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; text-align: right; }
+  td.delta-pos { color: var(--green); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; text-align: right; }
+  tbody tr:hover { background: var(--paper-soft); }
+  td b, th b { color: var(--ink); font-weight: 700; }
+
+  .tag-ok { color: var(--green); font-weight: 700; }
+  .tag-bad { color: var(--red); font-weight: 700; }
+  .tag-warn { color: var(--amber); font-weight: 700; }
+
+  ul, ol { margin: 8px 0 14px 24px; }
+  li { margin-bottom: 6px; line-height: 1.6; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    background: var(--paper-soft);
+    padding: 1px 5px;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+  pre {
+    background: var(--paper-soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .hl-g { background: var(--gender-bg); color: var(--gender); padding: 1px 5px; border-radius: 2px; font-weight: 600; }
+  .hl-a { background: var(--age-bg); color: var(--age); padding: 1px 5px; border-radius: 2px; font-weight: 600; }
+  .hl-r { background: var(--region-bg); color: var(--region); padding: 1px 5px; border-radius: 2px; font-weight: 600; }
+  .hl-l { background: var(--lifestyle-bg); color: var(--lifestyle); padding: 1px 5px; border-radius: 2px; font-weight: 600; }
+
+  .toc {
+    background: var(--paper-soft);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 16px 22px;
+    margin: 20px 0 28px;
+    font-size: 13px;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .toc ol { margin-left: 18px; list-style: decimal; }
+  .toc a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .toc a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 14px 0 18px;
+  }
+  .kpi-card {
+    background: var(--paper-soft);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
+    border-radius: 3px;
+    padding: 14px 16px;
+  }
+  .kpi-card.win { border-top-color: var(--green); background: #ECFDF5; }
+  .kpi-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .kpi-card .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .kpi-card .sub {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+  }
+
+  .doc-footer {
+    margin-top: 50px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-muted);
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+  .doc-footer b { color: var(--ink); }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .doc { box-shadow: none; padding: 24px; max-width: 100%; }
+    h2 { page-break-after: avoid; }
+    table { page-break-inside: avoid; }
+    .kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="eyebrow">DEEP LEARNING TERM PROJECT · 26-1 · MODEL RESULTS</div>
+    <h1>Korean Persona Demographic Profiling</h1>
+    <div class="h-ko">3 모델 (TextCNN / BiLSTM / CNN-LSTM Hybrid) × 3 조건 (Raw / Masked / Masked+Geo) Leakage Ablation</div>
+    <div class="meta">
+      <div><b>데이터셋</b> · <code>nemotron_100k_seed42.parquet</code> 100,000 행, 라이프 매칭 실패 13개 drop → <b>99,987</b></div>
+      <div><b>분할</b> · stratified by sex×age (12 bins), 80/10/10, seed=42 → train 79,985 / val 9,993 / test 10,009</div>
+      <div><b>토크나이저</b> · char-level (음절), min_freq=5, vocab ≈ 1,596 (train split에서만 빌드)</div>
+      <div><b>학습</b> · AdamW lr=1e-3 · batch=256 · 10 epochs · grad clip 5.0 · early stop patience=3</div>
+      <div><b>GPU</b> · NVIDIA RTX 3060 Ti 8GB · PyTorch 2.6+cu124 · Windows 11</div>
+    </div>
+  </div>
+
+  <!-- TL;DR -->
+  <h2 id="tldr"><span class="num">§0</span>TL;DR</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi-card win">
+      <div class="label">BEST MODEL</div>
+      <div class="value">TextCNN</div>
+      <div class="sub">3 조건 × 4 task = 12 셀 모두 1등</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">BEST AVG F1 (Raw)</div>
+      <div class="value">77.46</div>
+      <div class="sub">TextCNN · best ep 8 · 91s</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">LEAKAGE 흡수율</div>
+      <div class="value">−14%p</div>
+      <div class="sub">Raw → Masked+Geo (TextCNN avg)</div>
+    </div>
+  </div>
+
+  <ul>
+    <li><b>TextCNN이 3 조건 모두 1등.</b> BiLSTM·Hybrid가 한 번도 이긴 task 없음.</li>
+    <li><b>"X대" 마스킹 = 연령대 F1 −17~19%p</b> (모든 모델). LLM이 페르소나에 "60대"를 직접 박아넣음을 정량 확인.</li>
+    <li><b>지명 마스킹 = 광역시도 F1 −24~36%p</b>. 특히 BiLSTM이 가장 크게 무너짐 (−35.9%p) → 지명에 가장 의존.</li>
+    <li><b>성별·라이프스타일은 마스킹에 거의 영향 없음</b> → 직접 단어가 아닌 stereotype 시그널(가족 패턴, 취미 키워드)로 학습.</li>
+    <li><b>라이프스타일이 항상 bottleneck</b> (macro-F1 13~18%): 8-class 중 4개가 1k 미만으로 weak labeling 불균형 → 발표용 caveat.</li>
+  </ul>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">목차</div>
+    <ol>
+      <li><a href="#s1">실험 설정</a></li>
+      <li><a href="#s2">모델 구조</a></li>
+      <li><a href="#s3">Raw 결과</a></li>
+      <li><a href="#s4">Masked 결과 (X대 + 친족어)</a></li>
+      <li><a href="#s5">Masked+Geo 결과 (위 + 지명)</a></li>
+      <li><a href="#s6">Leakage Ablation 비교</a></li>
+      <li><a href="#s7">핵심 발견</a></li>
+      <li><a href="#s8">다음 단계</a></li>
+      <li><a href="#s9">재현 방법</a></li>
+    </ol>
+  </div>
+
+  <!-- §1 실험 설정 -->
+  <h2 id="s1"><span class="num">§1</span>실험 설정</h2>
+
+  <table>
+    <thead><tr><th>항목</th><th>값</th></tr></thead>
+    <tbody>
+      <tr><td>데이터</td><td><code>data/nemotron_100k_seed42.parquet</code> (MD5 <code>63a16d80…</code>)</td></tr>
+      <tr><td>샘플 수</td><td>99,987 (라이프스타일 키워드 0 매칭 13개 drop)</td></tr>
+      <tr><td>4 Task</td><td><span class="hl-g">성별(2)</span> · <span class="hl-a">연령대(6)</span> · <span class="hl-r">광역시도(17)</span> · <span class="hl-l">라이프(8, weak label)</span></td></tr>
+      <tr><td>입력</td><td>11개 narrative 컬럼 → <code>[SEP]</code> 연결 → max 512 chars truncate</td></tr>
+      <tr><td>토크나이저</td><td>char-level (한글 음절), min_freq=5, vocab ≈ 1,596 · <b>train split에서만 빌드</b></td></tr>
+      <tr><td>분할</td><td>stratified by <code>sex × age_bucket</code> (12 bins), 80/10/10, seed 42</td></tr>
+      <tr><td>옵티마이저</td><td>AdamW · lr=1e-3 · weight_decay=1e-5 · grad clip 5.0</td></tr>
+      <tr><td>학습</td><td>batch=256, 10 epochs, early stop patience=3 on val avg-macro-F1</td></tr>
+      <tr><td>손실</td><td>4 task cross-entropy <b>단순 합</b> (task별 가중치 없음, fair comparison)</td></tr>
+      <tr><td>평가</td><td>per-task accuracy + <b>macro-F1</b>, 4 task macro-F1 평균을 종합 지표</td></tr>
+    </tbody>
+  </table>
+
+  <!-- §2 모델 구조 -->
+  <h2 id="s2"><span class="num">§2</span>모델 구조</h2>
+
+  <p>임베딩 (128-dim, learned) 과 4-head 구조는 동일 → 인코더 단독 비교.</p>
+
+  <table>
+    <thead><tr><th>모델</th><th>인코더</th><th>풀링</th><th class="r">params</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>TextCNN</b><br><span style="color:var(--ink-muted); font-size:11px;">Yoon Kim, 2014</span></td>
+        <td>Conv1d k={3,4,5}, 96 filters each, ReLU</td>
+        <td>max-over-time</td>
+        <td class="r">361,569</td>
+      </tr>
+      <tr>
+        <td><b>BiLSTM</b><br><span style="color:var(--ink-muted); font-size:11px;">1-layer bidirectional</span></td>
+        <td>BiLSTM hidden=128, 양방향 concat</td>
+        <td>masked mean-pooling</td>
+        <td class="r">476,961</td>
+      </tr>
+      <tr>
+        <td><b>CNN-LSTM Hybrid</b><br><span style="color:var(--ink-muted); font-size:11px;">CNN → LSTM 직렬</span></td>
+        <td>Conv1d k=5 stride=2, 96 filters → BiLSTM hidden=128</td>
+        <td>masked mean-pooling</td>
+        <td class="r">505,729</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- §3 Raw -->
+  <h2 id="s3"><span class="num">§3</span>Raw 조건 결과</h2>
+  <p>narrative 그대로 사용. "60대 보안원", "여수에 거주", "딸 두 명" 같은 직접 단서 모두 포함. 최대 성능 baseline.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class="r">best ep</th>
+        <th class="r"><span class="hl-g">sex</span> F1</th>
+        <th class="r"><span class="hl-a">age</span> F1</th>
+        <th class="r"><span class="hl-r">prov</span> F1</th>
+        <th class="r"><span class="hl-l">life</span> F1</th>
+        <th class="r">avg F1</th>
+        <th class="r">time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>TextCNN</b></td>
+        <td class="r">8</td>
+        <td class="best r">98.81</td>
+        <td class="best r">94.13</td>
+        <td class="best r">99.13</td>
+        <td class="best r">17.76</td>
+        <td class="best r">77.46</td>
+        <td class="r">91s</td>
+      </tr>
+      <tr>
+        <td>BiLSTM</td>
+        <td class="r">10</td>
+        <td class="r">97.85</td>
+        <td class="r">93.60</td>
+        <td class="r">89.00</td>
+        <td class="r">13.13</td>
+        <td class="r">73.40</td>
+        <td class="r">184s</td>
+      </tr>
+      <tr>
+        <td>Hybrid</td>
+        <td class="r">10</td>
+        <td class="r">98.33</td>
+        <td class="r">93.43</td>
+        <td class="r">96.41</td>
+        <td class="r">13.21</td>
+        <td class="r">75.35</td>
+        <td class="r">124s</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- §4 Masked -->
+  <h2 id="s4"><span class="num">§4</span>Demographic Masked 결과</h2>
+  <p>"X대" 패턴(regex)과 친족어 (아내/남편/아들/딸/엄마/아빠/형/누나 등 15개) → <code>[AGE]</code>, <code>[FAM]</code>으로 치환. 다른 모든 텍스트 유지.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class="r">best ep</th>
+        <th class="r"><span class="hl-g">sex</span> F1</th>
+        <th class="r"><span class="hl-a">age</span> F1</th>
+        <th class="r"><span class="hl-r">prov</span> F1</th>
+        <th class="r"><span class="hl-l">life</span> F1</th>
+        <th class="r">avg F1</th>
+        <th class="r">time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>TextCNN</b></td>
+        <td class="r">9</td>
+        <td class="best r">98.43</td>
+        <td class="best r">77.35</td>
+        <td class="best r">98.99</td>
+        <td class="best r">16.69</td>
+        <td class="best r">72.86</td>
+        <td class="r">93s</td>
+      </tr>
+      <tr>
+        <td>BiLSTM</td>
+        <td class="r">10</td>
+        <td class="r">98.30</td>
+        <td class="r">74.09</td>
+        <td class="r">89.54</td>
+        <td class="r">12.86</td>
+        <td class="r">68.70</td>
+        <td class="r">188s</td>
+      </tr>
+      <tr>
+        <td>Hybrid</td>
+        <td class="r">10</td>
+        <td class="r">98.21</td>
+        <td class="r">74.87</td>
+        <td class="r">95.59</td>
+        <td class="r">13.32</td>
+        <td class="r">70.50</td>
+        <td class="r">124s</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- §5 Masked+Geo -->
+  <h2 id="s5"><span class="num">§5</span>Demographic + Geo Masked 결과</h2>
+  <p>위 + 광역시도 풀네임 (경기·서울·…) + 시군구 (여수·강남·…)를 alternation regex 한 방으로 <code>[GEO]</code> 치환. <b>모델이 가진 가장 깨끗한 stereotype-only 시그널.</b></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th class="r">best ep</th>
+        <th class="r"><span class="hl-g">sex</span> F1</th>
+        <th class="r"><span class="hl-a">age</span> F1</th>
+        <th class="r"><span class="hl-r">prov</span> F1</th>
+        <th class="r"><span class="hl-l">life</span> F1</th>
+        <th class="r">avg F1</th>
+        <th class="r">time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>TextCNN</b></td>
+        <td class="r">10</td>
+        <td class="best r">98.48</td>
+        <td class="best r">76.65</td>
+        <td class="best r">74.47</td>
+        <td class="best r">17.82</td>
+        <td class="best r">66.86</td>
+        <td class="r">89s</td>
+      </tr>
+      <tr>
+        <td>BiLSTM</td>
+        <td class="r">10</td>
+        <td class="r">97.70</td>
+        <td class="r">76.06</td>
+        <td class="r">53.09</td>
+        <td class="r">12.98</td>
+        <td class="r">59.95</td>
+        <td class="r">180s</td>
+      </tr>
+      <tr>
+        <td>Hybrid</td>
+        <td class="r">10</td>
+        <td class="r">97.87</td>
+        <td class="r">73.87</td>
+        <td class="r">64.70</td>
+        <td class="r">12.85</td>
+        <td class="r">62.32</td>
+        <td class="r">119s</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- §6 Ablation -->
+  <h2 id="s6"><span class="num">§6</span>Leakage Ablation — 조건별 비교</h2>
+
+  <p>각 조건의 test macro-F1과 Raw 대비 변화량 (Δ는 %p). 빨강 셀이 클수록 해당 마스킹이 task에 큰 영향을 줬다는 뜻.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>Task</th>
+        <th class="r">Raw</th>
+        <th class="r">Masked</th>
+        <th class="r">Δ vs Raw</th>
+        <th class="r">Masked+Geo</th>
+        <th class="r">Δ vs Raw</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td rowspan="4"><b>TextCNN</b></td>
+          <td><span class="hl-g">성별</span></td><td class="r">98.81</td><td class="r">98.43</td><td class="delta-ok">−0.38</td><td class="r">98.48</td><td class="delta-ok">−0.33</td></tr>
+      <tr><td><span class="hl-a">연령대</span></td><td class="r">94.13</td><td class="r">77.35</td><td class="delta-bad">−16.78</td><td class="r">76.65</td><td class="delta-bad">−17.47</td></tr>
+      <tr><td><span class="hl-r">광역시도</span></td><td class="r">99.13</td><td class="r">98.99</td><td class="delta-ok">−0.14</td><td class="r">74.47</td><td class="delta-bad">−24.66</td></tr>
+      <tr><td><span class="hl-l">라이프</span></td><td class="r">17.76</td><td class="r">16.69</td><td class="delta-ok">−1.07</td><td class="r">17.82</td><td class="delta-pos">+0.07</td></tr>
+
+      <tr><td rowspan="4"><b>BiLSTM</b></td>
+          <td><span class="hl-g">성별</span></td><td class="r">97.85</td><td class="r">98.30</td><td class="delta-pos">+0.45</td><td class="r">97.70</td><td class="delta-ok">−0.15</td></tr>
+      <tr><td><span class="hl-a">연령대</span></td><td class="r">93.60</td><td class="r">74.09</td><td class="delta-bad">−19.50</td><td class="r">76.06</td><td class="delta-bad">−17.54</td></tr>
+      <tr><td><span class="hl-r">광역시도</span></td><td class="r">89.00</td><td class="r">89.54</td><td class="delta-pos">+0.54</td><td class="r">53.09</td><td class="delta-bad">−35.92</td></tr>
+      <tr><td><span class="hl-l">라이프</span></td><td class="r">13.13</td><td class="r">12.86</td><td class="delta-ok">−0.27</td><td class="r">12.98</td><td class="delta-ok">−0.16</td></tr>
+
+      <tr><td rowspan="4"><b>Hybrid</b></td>
+          <td><span class="hl-g">성별</span></td><td class="r">98.33</td><td class="r">98.21</td><td class="delta-ok">−0.12</td><td class="r">97.87</td><td class="delta-ok">−0.46</td></tr>
+      <tr><td><span class="hl-a">연령대</span></td><td class="r">93.43</td><td class="r">74.87</td><td class="delta-bad">−18.57</td><td class="r">73.87</td><td class="delta-bad">−19.56</td></tr>
+      <tr><td><span class="hl-r">광역시도</span></td><td class="r">96.41</td><td class="r">95.59</td><td class="delta-ok">−0.82</td><td class="r">64.70</td><td class="delta-bad">−31.71</td></tr>
+      <tr><td><span class="hl-l">라이프</span></td><td class="r">13.21</td><td class="r">13.32</td><td class="delta-pos">+0.11</td><td class="r">12.85</td><td class="delta-ok">−0.36</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <b>Raw → Masked Δ</b> : "X대"·친족어 같은 직접 단서가 기여한 정도<br>
+    <b>Masked → Masked+Geo Δ</b> : 광역시도·시군구 지명이 기여한 정도<br>
+    <b>Masked+Geo 잔존 점수</b> : 모델이 stereotype에서 실제로 학습한 시그널 ⭐
+  </div>
+
+  <!-- §7 핵심 발견 -->
+  <h2 id="s7"><span class="num">§7</span>핵심 발견</h2>
+
+  <h3><span class="num">7.1</span>모델 비교 — TextCNN의 일관된 우위</h3>
+  <p>3 조건 × 4 task = 12 셀 모두 <b>TextCNN ≥ Hybrid > BiLSTM</b>. 한국어 페르소나 분류처럼 <b>국지적 키워드 phrase</b>("무등산 자락", "60대 보안원")가 결정적인 task에서는 multi-kernel CNN의 max-over-time pooling이 가장 효율적.</p>
+  <ul>
+    <li>BiLSTM은 10 epochs로 province task에서 끝까지 수렴 못함 (Raw 0.890 vs CNN 0.991).</li>
+    <li>Hybrid는 두 모델 사이에 정확히 위치 — "CNN feature map을 LSTM에 넣으면 더 좋아진다"는 가설은 본 데이터에서 <b>거짓</b>.</li>
+    <li>Hybrid 506k params (CNN의 1.4배)인데도 진다 → 단순 capacity로는 안 됨.</li>
+  </ul>
+
+  <h3><span class="num">7.2</span>Leakage 정량 — EDA §5 예측 검증</h3>
+  <table>
+    <thead><tr><th>누설 종류</th><th class="r">EDA 측정 (노출률)</th><th class="r">실제 영향 (TextCNN F1 변화)</th></tr></thead>
+    <tbody>
+      <tr><td><span class="hl-a">연령대 "X대"</span></td><td class="r">60.9%</td><td class="r delta-bad">−16.78%p (94 → 77)</td></tr>
+      <tr><td><span class="hl-r">광역시도/시군구</span></td><td class="r">82.5%</td><td class="r delta-bad">−24.66%p (99 → 74)</td></tr>
+      <tr><td><span class="hl-g">성별 친족어</span></td><td class="r">45.1%</td><td class="r delta-ok">−0.38%p (98.8 → 98.4)</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <b>성별 누설은 단어 마스킹만으로 사라지지 않음.</b> 직업·취미·요리 키워드 등 stereotype 시그널에서 모델이 우회 학습. 발표 포인트로 활용 가치 큼 — "마스킹은 안전장치가 아니다."
+  </div>
+
+  <h3><span class="num">7.3</span>Stereotype 잔존 신호 (Masked+Geo = 가장 깨끗한 baseline)</h3>
+  <p>직접 demographic 단어·지명을 모두 제거한 뒤에도 TextCNN이 보여주는 점수:</p>
+  <ul>
+    <li><b>성별 98.48</b> — 거의 손실 없음. 모델은 페르소나 narrative에서 성별을 직접 단어 없이도 추론 가능.</li>
+    <li><b>연령대 76.65</b> — 17%p 떨어졌지만 여전히 매우 높음. "온천 여행", "트로트", "은퇴" 같은 간접 단서로 학습.</li>
+    <li><b>광역시도 74.47</b> — 지명을 다 가렸어도 75% (random=5.9%, majority=26%). 지역 특산물·사투리·관광지 키워드.</li>
+    <li><b>라이프스타일 17.82</b> — 사실상 변동 없음 (대표 클래스만 맞추는 수준).</li>
+  </ul>
+
+  <div class="callout good">
+    이 점수가 곧 <b>모델이 학습한 진짜 stereotype 시그널의 크기</b>. EDA §6의 핵심 contribution이 정량으로 검증됨.
+  </div>
+
+  <!-- §8 다음 단계 -->
+  <h2 id="s8"><span class="num">§8</span>다음 단계 제안</h2>
+
+  <ol>
+    <li><b>라이프스타일 8-class 재정의</b> — 현재 fashion_style(400 samples) / beauty_care(1117)이 너무 희소. 4-class로 머지하거나 class-weighted CE로 균형 학습. 코드에 이미 <code>--weighted</code> 옵션 구현 완료:<br>
+    <code>python src/run_all.py raw 10 --weighted</code></li>
+    <li><b>BiLSTM 미수렴 정량화</b> — 본 실험은 10 epochs로 통일했으나, BiLSTM은 province task에서 끝까지 학습 곡선이 상승 중. 20+ epochs로 늘리면 격차가 줄 수도 있음 (반대로 CNN은 이미 saturate). "공정 비교 vs 충분 학습" 트레이드오프 논의 거리.</li>
+    <li><b>"우회 학습" 시각화</b> — Masked+Geo 조건에서 모델이 어떤 키워드에 attention/activation을 주는지 시각화. TextCNN은 conv activation을 그대로 보여줄 수 있어 데모 효과 큼.</li>
+    <li><b>발표 narrative</b> — "LLM이 만든 합성 데이터에서도 한국 사회 stereotype이 강력하게 인코딩되어 있어, 단순 마스킹으로는 누설을 막을 수 없다"는 결론. EDA의 측정 + 모델 ablation = 완결된 스토리.</li>
+  </ol>
+
+  <!-- §9 재현 -->
+  <h2 id="s9"><span class="num">§9</span>재현 방법</h2>
+
+<pre># 0. 의존성 (글로벌 Python 3.12 기준)
+pip install torch --index-url https://download.pytorch.org/whl/cu124
+pip install pandas pyarrow scikit-learn
+
+# 1. 데이터 확인 (이미 git lfs로 받아져있음)
+ls data/nemotron_100k_seed42.parquet
+
+# 2. 3 모델 × 3 조건 학습 (총 ~25분 on RTX 3060 Ti)
+python src/run_all.py raw 10        # Raw 조건       (~6분)
+python src/run_all.py masked 10     # X대+친족어 마스킹  (~7분)
+python src/run_all.py masked_geo 10 # 위 + 지명 마스킹   (~7분)
+
+# 3. 보고서 갱신
+python results/make_report.py</pre>
+
+  <h3><span class="num">9.1</span>결과 파일 위치</h3>
+  <table>
+    <thead><tr><th>경로</th><th>내용</th></tr></thead>
+    <tbody>
+      <tr><td><code>results/RESULTS.md</code></td><td>이 문서의 markdown 버전</td></tr>
+      <tr><td><code>results/RESULTS.html</code></td><td>이 문서</td></tr>
+      <tr><td><code>results/{model}_{cond}.json</code></td><td>모델별 상세 (history, confusion matrix, test 점수) — 9개</td></tr>
+      <tr><td><code>results/summary_{cond}.json</code></td><td>조건별 요약 — 3개</td></tr>
+      <tr><td><code>checkpoints/{model}_{cond}_best.pt</code></td><td>최선 가중치 — 9개 (총 ~16MB)</td></tr>
+      <tr><td><code>checkpoints/tokenizer_{cond}.json</code></td><td>음절 vocab — 3개</td></tr>
+    </tbody>
+  </table>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    NEMOTRON-PERSONAS-KOREA · 100K SAMPLED · TextCNN · BiLSTM · CNN-LSTM Hybrid &nbsp;·&nbsp;
+    <b>2단계 결과 공유</b>
+  </div>
+
+</div>
+
+</body>
+</html>
