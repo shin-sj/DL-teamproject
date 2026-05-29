@@ -113,7 +113,6 @@ EDA 단계의 측정값 vs 실제 모델 성능 변화:
 
 1. **라이프스타일 8-class 재정의** — 현재 fashion_style(400 samples) / beauty_care(1117) 너무 희소. 4-class로 머지하거나 class-weighted CE로 균형 학습. 코드에 이미 `--weighted` 옵션 구현 완료 (`python src/run_all.py raw 10 --weighted`).
 2. **모델 capacity 차이** — TextCNN 362k vs Hybrid 506k. Hybrid가 1.4배 큰 모델인데도 진다는 점에서 "단순 capacity로는 안 됨"의 좋은 증거. 발표 슬라이드에서 강조 가능.
-3. **BiLSTM 미수렴** — 본 실험은 10 epochs로 통일했으나, BiLSTM은 province task에서 끝까지 학습 곡선이 상승 중. 20+ epochs로 늘리면 격차가 줄 수도 있음 (반대로 CNN은 이미 saturate). "공정 비교 vs 충분 학습" 트레이드오프 논의 거리.
 
 ## 재현 방법
 

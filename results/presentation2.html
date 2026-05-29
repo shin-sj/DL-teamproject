@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Saliency 시각화 — 쉽게 설명</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F8FAFC;
+  --paper: #FFFFFF;
+  --ink: #0F172A;
+  --ink-soft: #334155;
+  --ink-muted: #64748B;
+  --rule: #E2E8F0;
+  --soft: #F1F5F9;
+  --accent: #1E40AF;
+  --sex: #DB2777;
+  --age: #0891B2;
+  --prov: #7C3AED;
+  --life: #059669;
+  --red: #DC2626;
+  --green: #059669;
+  --amber: #D97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: 'Pretendard', sans-serif; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+.toc {
+  position: sticky; top: 24px; align-self: start;
+  font-size: 13px; line-height: 1.85;
+  border-left: 2px solid var(--rule); padding-left: 16px;
+}
+.toc .toc-title { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.toc a { display: block; color: var(--ink-muted); text-decoration: none; padding: 2px 0; }
+.toc a:hover { color: var(--accent); }
+
+article { min-width: 0; font-size: 16px; }
+
+.hero {
+  background: linear-gradient(135deg, #1E40AF 0%, #0891B2 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 36px 40px;
+  margin-bottom: 40px;
+}
+.hero .eyebrow { font-size: 12px; color: #C7D2FE; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.hero h1 { font-size: 28px; font-weight: 700; margin: 8px 0 12px; letter-spacing: -.02em; line-height: 1.3; }
+.hero p { font-size: 15px; color: #DBEAFE; line-height: 1.7; }
+
+h2 {
+  font-size: 22px; font-weight: 700; letter-spacing: -.01em;
+  margin: 56px 0 12px; padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+h2:first-of-type { border-top: none; padding-top: 0; }
+h2 .emoji { display: inline-block; margin-right: 6px; }
+
+h3 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: var(--ink); }
+h4 { font-size: 14px; font-weight: 600; margin: 16px 0 6px; color: var(--ink-soft); }
+
+p { color: var(--ink-soft); margin-bottom: 14px; line-height: 1.75; }
+p strong { color: var(--ink); }
+p.lead { font-size: 17px; line-height: 1.7; }
+p.lead strong { background: linear-gradient(transparent 60%, #FEF08A 60%); padding: 0 2px; color: var(--ink); }
+
+ul { padding-left: 20px; margin-bottom: 14px; color: var(--ink-soft); line-height: 1.85; }
+ul li strong { color: var(--ink); }
+
+.callout {
+  background: #FEF3C7;
+  border-left: 4px solid var(--amber);
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin: 16px 0;
+}
+.callout.success { background: #D1FAE5; border-left-color: var(--green); }
+.callout.danger  { background: #FEE2E2; border-left-color: var(--red); }
+.callout.info    { background: #DBEAFE; border-left-color: var(--accent); }
+.callout strong { color: var(--ink); }
+.callout .big { font-size: 17px; display: block; margin-bottom: 6px; font-weight: 600; }
+
+.story {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 16px 0;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.story .who { font-weight: 700; color: var(--accent); font-size: 13px; letter-spacing: .03em; }
+.story .quote { font-style: italic; color: var(--ink-soft); margin: 8px 0; }
+.story .reaction { background: var(--soft); border-radius: 6px; padding: 10px 14px; margin-top: 10px; font-size: 14px; }
+
+.saliency-demo {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 12px 0;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  line-height: 2.1;
+}
+.kw1 { background: rgba(220,38,38,0.95); color: #fff; padding: 2px 5px; border-radius: 3px; font-weight: 700; }
+.kw2 { background: rgba(220,38,38,0.75); padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+.kw3 { background: rgba(220,38,38,0.55); padding: 2px 5px; border-radius: 3px; font-weight: 600; }
+.kw4 { background: rgba(220,38,38,0.35); padding: 2px 5px; border-radius: 3px; }
+
+.legend { display: flex; gap: 10px; font-size: 12px; color: var(--ink-muted); margin-top: 8px; align-items: center; flex-wrap: wrap; }
+.legend .swatch { display: inline-block; width: 18px; height: 14px; border-radius: 3px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 14px 0;
+  background: var(--paper);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+}
+table.data th, table.data td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+}
+table.data th { background: var(--soft); font-weight: 600; font-size: 13px; }
+table.data td.label { text-align: left; font-weight: 500; }
+table.data td.good { color: var(--green); font-weight: 600; }
+table.data td.bad { color: var(--red); font-weight: 700; background: #FEE2E2; }
+table.data td.warn { color: var(--amber); font-weight: 600; }
+table.data td.left { text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
+
+.tldr {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 24px 0;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.tldr .label { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: .1em; }
+
+.compare-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.compare-card .who { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+.compare-card .ans { font-size: 14px; }
+
+footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px; }
+  .toc { display: none; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<nav class="toc">
+  <div class="toc-title">목차</div>
+  <a href="#what">1. Saliency가 뭐냐</a>
+  <a href="#cases">2. 3 케이스 분석</a>
+  <a href="#wrap">3. 실험 결과 정리</a>
+</nav>
+
+<article>
+
+<section class="hero">
+  <div class="eyebrow">DL 텀프로젝트 · 추가 실험</div>
+  <h1>🔍 Saliency 시각화 — 모델이 어떤 글자 보고 답했나?</h1>
+  <p>모델이 "이 사람 전남 사람이에요"라고 답해도 우리는 <strong>왜 그렇게 생각했는지</strong> 모르잖아요. 모델 머릿속을 들여다보는 도구가 saliency예요. 모델이 답할 때 <strong>어떤 글자에 빨간색이 진하게 켜졌나</strong>를 보여주는 거.</p>
+</section>
+
+
+<!-- ============================================================ -->
+<h2 id="what"><span class="emoji">🔍</span>1. Saliency가 뭐냐</h2>
+
+<p class="lead">모델이 답을 낼 때 <strong>"어떤 글자가 결정적이었나"</strong>를 글자 단위로 색깔로 표시하는 거예요.</p>
+
+<h3>한 줄 예시</h3>
+
+<p>"갯벌에서 꼬막을 캐는 김순자 여사"라는 문장을 모델에 넣고 "이 사람 어디 사람?"이라고 물으면 모델이 "<strong>전라남도</strong>"라고 답해요. 그런데 모델이 왜 그렇게 답했을까요?</p>
+
+<div class="saliency-demo">
+  "65세 김순자 여사는 매일 새벽 <span class="kw1">갯벌</span>에서 <span class="kw2">조개</span>를 캐고 <span class="kw1">꼬막무침</span>을 잘 만드신다. 마을 어귀의 <span class="kw3">갯바람</span>이 시원하다고 한다."
+  <div class="legend">
+    <span class="swatch kw1"></span>중요도 높음
+    <span class="swatch kw2"></span>중간
+    <span class="swatch kw3"></span>낮음
+    <span style="margin-left:8px;">→ 빨강이 진할수록 그 글자가 답에 결정적이었다는 뜻</span>
+  </div>
+</div>
+
+<p>이 그림 보면 한눈에 알 수 있죠: 모델은 <strong>"갯벌·꼬막·조개·갯바람"</strong>을 보고 "이 사람 전라남도구나"라고 답한 거예요. 텍스트에 "전남"이라는 글자가 한 번도 없는데도요.</p>
+
+<div class="callout info">
+  <span class="big">💡 핵심</span>
+  Saliency = 모델 머릿속을 색깔로 그려놓은 거. <strong>어디 보고 답했는지</strong>를 한눈에 알 수 있게 해주는 도구.
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="cases"><span class="emoji">🔬</span>2. 3 케이스 분석 — 모델별로 다르게 끌림</h2>
+
+<p>같은 페르소나를 다른 모델(TextCNN vs Hybrid)에 넣고 saliency를 비교했어요. 모델별로 <strong>어떤 글자에 끌리느냐</strong>가 달라요.</p>
+
+<h3 id="case1">📌 케이스 1 — "민호씨, 가정주부" 성별 예측</h3>
+
+<div class="story">
+  <div class="who">함정 페르소나</div>
+  <div class="quote">"<strong>민호씨</strong>는 30대 가정주부로 매일 아이 셋을 등원시키고 <strong>베이킹과 살림</strong>에 매진한다..."</div>
+</div>
+
+<table class="data">
+  <thead><tr><th>모델</th><th>답</th><th>가장 영향 컸던 단어 top 4</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>TextCNN</td>
+      <td class="good">남자 ✓ (82%)</td>
+      <td class="left">"<strong>민호씨</strong>" · "주부로" · "살림에" · "이킹과"</td>
+    </tr>
+    <tr>
+      <td>Hybrid</td>
+      <td class="bad">여자 ✗ (90%)</td>
+      <td class="left">"<strong>민호씨</strong>" · "이킹과" · "정주부" · "살림"</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <span class="big">🤯 가장 인상적인 발견</span>
+  <strong>두 모델이 본 단어가 거의 똑같아요!</strong> "민호씨·베이킹·가정주부·살림" 다 같이 봤어요. 그런데 답은 정반대.<br><br>
+  → TextCNN은 "<strong>민호</strong>"라는 남자 이름에 가중치 더 줘서 남자라고 답.<br>
+  → Hybrid는 "<strong>베이킹·살림</strong>" stereotype에 가중치 더 줘서 여자라고 90%로 답.
+</div>
+
+<h4 style="margin-top:20px;">🤔 왜 같은 단어 봤는데 답이 정반대일까?</h4>
+<p>두 모델이 신호를 합치는 방식(pooling)이 달라서 그래요.</p>
+
+<div class="grid-2" style="margin-top:10px;">
+  <div class="callout success">
+    <span class="big">🎯 TextCNN — "가장 센 신호 1개만"</span>
+    <strong>max-pool</strong> 방식. 단어 중 가장 강한 신호 하나만 채택.<br><br>
+    "민호씨"라는 강한 남성 단서가 있으면 그것만 따라감. <strong>stereotype 단어가 6개 있어도 무시</strong>.<br><br>
+    → "민호래잖아, 남자지" 단호한 친구 성격.
+  </div>
+  <div class="callout danger">
+    <span class="big">📊 Hybrid — "전체 평균 분위기"</span>
+    <strong>mean-pool</strong> 방식. 모든 단어 점수를 평균.<br><br>
+    "민호씨"(남성 1표) vs "베이킹·살림·가정주부·요리·뜨개질"(여성 5표) → 평균이 여성쪽.<br><br>
+    → "근데 베이킹·살림 하니까... 여자 같은데?" 분위기 보는 친구.
+  </div>
+</div>
+
+
+<div class="callout">
+  <span class="big">🎯 핵심</span>
+  <strong>"무엇을 봤는가"가 아니라 "어디에 가중치를 줬는가"의 문제.</strong> 두 모델이 같은 단서를 봤지만 학습된 내부 가중치가 다른 우선순위를 만들어 정반대 답을 낸 거예요.
+</div>
+
+<h3 id="case2">📌 케이스 2 — "75세 여성 게이머" 연령 예측</h3>
+
+<div class="story">
+  <div class="who">함정 페르소나</div>
+  <div class="quote">"<strong>75세 이여사</strong>는 매일 <strong>PC방에서 배틀그라운드</strong>를 플레이하고, 트위치에서 게이밍 방송을 자주 본다. <strong>게이밍 마우스 컬렉션이 100개</strong>가 넘는다. 손자가 알려준 디스코드로 길드 활동에 열심..."</div>
+  <div class="reaction">👵 "75세"라고 분명히 적혀있는데, "게임·트위치·디스코드" stereotype은 젊은 사람과 연결되죠. 모델은 무엇을 따라갈까?</div>
+</div>
+
+<table class="data">
+  <thead><tr><th>모델</th><th>연령 예측</th><th>가장 영향 컸던 단어 top 4</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>TextCNN</td>
+      <td class="good">70+ ✓ (100%)</td>
+      <td class="left">"<strong>75세</strong>"(26.3) · "컬렉션" · "00개" · "이여"</td>
+    </tr>
+    <tr>
+      <td>Hybrid</td>
+      <td class="bad">50s ✗ (92%)</td>
+      <td class="left">"<strong>75세</strong>"(27.6) · "이여" · "100" · "션이"</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout danger">
+  <span class="big">🤯 텍스트에 "75세"라고 적혔는데 50대라고 답함</span>
+  텍스트에 <strong>"75세"</strong>라는 명백한 숫자가 있어요. 두 모델 다 saliency top에 "75세"가 가장 강하게 잡혔어요 — 즉 둘 다 그 단어를 분명히 봤다는 뜻.<br><br>
+  ✓ <strong>TextCNN</strong>: "75세" 따라가서 70+ 정답 (100%)<br>
+  ✗ <strong>Hybrid</strong>: "75세"를 봤는데도 <strong>50대로 92% 확신</strong>해버림
+</div>
+
+<div class="callout info">
+  명백한 숫자 단서("75세")가 있는데도 모델이 stereotype 키워드들의 영향으로 잘못된 답을 낸다는 점에서, AI가 학습한 고정관념이 명시적 정보보다 우선시될 수 있음을 보여주는 사례.
+</div>
+
+<h3 id="case3">📌 케이스 3 — "20대 트로트 광팬" 광역시도 예측</h3>
+
+<div class="story">
+  <div class="who">함정 페르소나</div>
+  <div class="quote">"26세 김지수씨는 <strong>트로트 가수 임영웅</strong>의 열성팬이다. 매주 트로트 콘서트를 다니며..."</div>
+  <div class="reaction">⚠️ 텍스트에 <strong>지역 단어가 한 글자도 없어요</strong>. 서울, 부산, 어디라고 한 글자도 안 했어요.</div>
+</div>
+
+<table class="data">
+  <thead><tr><th>모델</th><th>지역 예측</th><th>가장 영향 컸던 단어 top 4</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>TextCNN</td>
+      <td class="good">경기 67%</td>
+      <td class="left">"열성팬" · "김지수" · "막걸리" · "26세"</td>
+    </tr>
+    <tr>
+      <td>Hybrid</td>
+      <td class="bad">경상북 28%</td>
+      <td class="left">"매주" · <strong>"임영웅"</strong> · <strong>"트로트"</strong> · "가수"</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout success">
+  <span class="big">✓ TextCNN — stereotype에 안 끌리고 default로 답</span>
+  TextCNN은 saliency top에 "열성팬·김지수·막걸리·26세" 같은 <strong>일반적인 단어들</strong>만 잡혔어요. "임영웅·트로트"가 top에 거의 없음.<br><br>
+  → 지역 단서가 없으니 모르겠다고 판단해서 그냥 <strong>인구 분포상 가장 많은 경기도(67%)로 안전하게 답</strong>. <strong>stereotype 편향이 작동하지 않음.</strong>
+</div>
+
+<div class="callout danger">
+  <span class="big">🤯 Hybrid — 가수 이름만으로 지역 추론</span>
+  Hybrid의 saliency top: <strong>"매주·임영웅·트로트·가수"</strong>. 명백히 stereotype 키워드에 끌림.<br><br>
+  → <strong>임영웅이 포항(경상북도) 출신</strong>이라 모델이 학습 데이터에서 "임영웅 → 경북" 매핑을 자동으로 외운 거예요. 텍스트에 지역 단어가 한 글자도 없는데 <strong>가수 이름 하나 보고 그 팬의 거주지를 추론</strong>.
+</div>
+
+<div class="callout info">
+  <span class="big">💡 두 모델 비교의 핵심</span>
+  같은 텍스트 입력에 대해 <strong>TextCNN은 stereotype 키워드에 안 끌렸고</strong>, <strong>Hybrid는 강하게 끌렸어요</strong>. 두 모델의 편향 강도 차이를 가장 깔끔하게 보여주는 사례.
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="wrap"><span class="emoji">✨</span>3. 실험 결과 정리</h2>
+
+<h3>🎯 3가지 핵심 발견</h3>
+
+<table class="data">
+  <thead>
+    <tr><th>케이스</th><th>task</th><th>발견</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="label">🧁 남성 가정주부</td>
+      <td>성별</td>
+      <td class="left">두 모델이 <strong>같은 단어</strong>("민호씨·베이킹·살림")를 봤는데 답이 정반대 → TextCNN은 남자, Hybrid는 여자 90%</td>
+    </tr>
+    <tr>
+      <td class="label">🌾 75세 여성 게이머</td>
+      <td>연령</td>
+      <td class="left">텍스트에 <strong>"75세"</strong> 명시 + saliency top에도 잡혔는데, Hybrid는 게임 stereotype에 끌려 <strong>50대로 92% 확신</strong></td>
+    </tr>
+    <tr>
+      <td class="label">🎤 20대 트로트 광팬</td>
+      <td>지역</td>
+      <td class="left">지역 단어가 <strong>한 글자도 없는데</strong>, Hybrid가 "임영웅" 이름만 보고 <strong>경상북도</strong>로 예측 (포항 출신 stereotype)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 style="margin-top:24px;">💡 이 실험으로 무엇을 보여줬나</h3>
+
+<div class="callout success">
+  <span class="big">① 모델이 어떤 글자에 끌렸는지 직접 노출</span>
+  평균 점수표는 "stereotype이 있다"까지만 알려주는데, saliency는 <strong>어떤 글자가 그 stereotype 신호인지</strong>를 글자 단위로 시각화. "갯벌·임영웅·베이킹" 같은 구체적 단어가 stereotype의 정체임을 직접 증명.
+</div>
+
+<div class="callout success">
+  <span class="big">② 같은 단어를 봤어도 모델별로 다르게 끌림</span>
+  편향은 "<strong>무엇을 봤는가</strong>"가 아니라 "<strong>어디에 가중치를 줬는가</strong>"의 문제. 평균 점수로는 비슷해 보이는 모델도(TextCNN 77, Hybrid 75), saliency로 보면 stereotype 처리 방식이 구조적으로 다름이 드러남.
+</div>
+
+<div class="callout success">
+  <span class="big">③ 명시적 단서가 있어도 stereotype이 우선</span>
+  "75세"라는 명백한 숫자가 있고 모델이 그 단어를 봤음에도(saliency top) Hybrid는 50대로 답함. AI가 학습한 고정관념이 명시적 정보보다 우선시될 수 있음을 사례로 확인.
+</div>
+
+<div class="callout" style="background:linear-gradient(135deg,#1E40AF,#0891B2); color:#fff; border-left:none; margin-top:20px;">
+  <span class="big" style="color:#fff;">🎯 한 줄 결론</span>
+  Saliency 시각화로 한국어 페르소나 분류 모델 안의 stereotype을 <strong>측정값(점수)이 아니라 메커니즘(글자)</strong> 수준에서 노출. 특히 "임영웅 → 경상북도"처럼 가수 이름만으로 거주지를 추론하는 모습은 AI가 한국 사회 고정관념을 얼마나 깊이 인코딩하는지 직접 보여주는 사례.
+</div>
+
+<footer>Nemotron-Personas-Korea 100k · raw 조건 · Input × Gradient saliency</footer>
+
+</article>
+
+</div>
+
+</body>
+</html>

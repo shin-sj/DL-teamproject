@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Stereotype 깨기 — 쉽게 설명</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F8FAFC;
+  --paper: #FFFFFF;
+  --ink: #0F172A;
+  --ink-soft: #334155;
+  --ink-muted: #64748B;
+  --rule: #E2E8F0;
+  --soft: #F1F5F9;
+  --accent: #1E40AF;
+  --sex: #DB2777;
+  --age: #0891B2;
+  --prov: #7C3AED;
+  --life: #059669;
+  --red: #DC2626;
+  --green: #059669;
+  --amber: #D97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: 'Pretendard', sans-serif; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+.toc {
+  position: sticky; top: 24px; align-self: start;
+  font-size: 13px; line-height: 1.85;
+  border-left: 2px solid var(--rule); padding-left: 16px;
+}
+.toc .toc-title { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.toc a { display: block; color: var(--ink-muted); text-decoration: none; padding: 2px 0; }
+.toc a:hover { color: var(--accent); }
+
+article { min-width: 0; font-size: 16px; }
+
+.hero {
+  background: linear-gradient(135deg, #DB2777 0%, #7C3AED 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 36px 40px;
+  margin-bottom: 40px;
+}
+.hero .eyebrow { font-size: 12px; color: #FCE7F3; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.hero h1 { font-size: 28px; font-weight: 700; margin: 8px 0 12px; letter-spacing: -.02em; line-height: 1.3; }
+.hero p { font-size: 15px; color: #FCE7F3; line-height: 1.7; }
+
+h2 {
+  font-size: 22px; font-weight: 700; letter-spacing: -.01em;
+  margin: 56px 0 12px; padding-top: 24px;
+  border-top: 1px solid var(--rule);
+}
+h2:first-of-type { border-top: none; padding-top: 0; }
+h2 .emoji { display: inline-block; margin-right: 6px; }
+
+h3 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: var(--ink); }
+h4 { font-size: 14px; font-weight: 600; margin: 16px 0 6px; color: var(--ink-soft); }
+
+p { color: var(--ink-soft); margin-bottom: 14px; line-height: 1.75; }
+p strong { color: var(--ink); }
+p.lead { font-size: 17px; line-height: 1.7; }
+p.lead strong { background: linear-gradient(transparent 60%, #FEF08A 60%); padding: 0 2px; color: var(--ink); }
+
+ul { padding-left: 20px; margin-bottom: 14px; color: var(--ink-soft); line-height: 1.85; }
+ul li strong { color: var(--ink); }
+
+.callout {
+  background: #FEF3C7;
+  border-left: 4px solid var(--amber);
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin: 16px 0;
+}
+.callout.success { background: #D1FAE5; border-left-color: var(--green); }
+.callout.danger  { background: #FEE2E2; border-left-color: var(--red); }
+.callout.info    { background: #DBEAFE; border-left-color: var(--accent); }
+.callout strong { color: var(--ink); }
+.callout .big { font-size: 17px; display: block; margin-bottom: 6px; font-weight: 600; }
+
+.story {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--sex);
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 16px 0;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.story .who { font-weight: 700; color: var(--sex); font-size: 13px; letter-spacing: .03em; }
+.story .quote { font-style: italic; color: var(--ink-soft); margin: 8px 0; }
+.story .reaction { background: var(--soft); border-radius: 6px; padding: 10px 14px; margin-top: 10px; font-size: 14px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+.persona {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.persona .title { font-weight: 700; font-size: 15px; color: var(--sex); margin-bottom: 6px; }
+.persona .desc { font-size: 13px; line-height: 1.65; color: var(--ink-soft); }
+.persona .twist { font-size: 12px; color: var(--ink-muted); margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--rule); }
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 14px 0;
+  background: var(--paper);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+}
+table.data th, table.data td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+}
+table.data th { background: var(--soft); font-weight: 600; font-size: 13px; }
+table.data td.label { text-align: left; font-weight: 500; }
+table.data td.good { color: var(--green); font-weight: 600; }
+table.data td.bad { color: var(--red); font-weight: 700; background: #FEE2E2; }
+table.data td.warn { color: var(--amber); font-weight: 600; }
+
+.tldr {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 24px 0;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.tldr .label { font-size: 11px; font-weight: 700; color: var(--amber); letter-spacing: .1em; }
+
+footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px; }
+  .toc { display: none; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<nav class="toc">
+  <div class="toc-title">목차</div>
+  <a href="#what">1. 어떤 실험인가</a>
+  <a href="#why">2. 왜 했나</a>
+  <a href="#how">3. 어떻게 했나</a>
+  <a href="#result">4. 결과</a>
+  <a href="#case">5. 인상적인 케이스</a>
+  <a href="#why-hybrid">6. 왜 Hybrid가 더 휘둘리나</a>
+  <a href="#wrap">7. 한 줄 정리</a>
+</nav>
+
+<article>
+
+<section class="hero">
+  <div class="eyebrow">DL 텀프로젝트 · 추가 실험</div>
+  <h1>🎭 Stereotype 깨기 — 모델한테 일부러 헷갈리는 사람을 보여주면?</h1>
+  <p>"60대 한국 남자"라고 하면 트로트, 등산, 막걸리가 떠오르잖아요. 그런데 만약 그 사람이 사실은 <strong>매일 PC방에서 게임만 한다면?</strong> 모델은 이 사람을 어떻게 분류할까요? 한국 사회의 고정관념(stereotype)과 일부러 안 맞는 사람 6명을 만들어서 모델에게 보여줬어요.</p>
+</section>
+
+
+<!-- ============================================================ -->
+<h2 id="what"><span class="emoji">🤔</span>1. 어떤 실험인가</h2>
+
+<p class="lead">우리 모델한테 <strong>"한국 사회 고정관념과 정반대인 사람"</strong>들을 보여주고 어떻게 답하는지 본 거예요.</p>
+
+<h3>예를 들어 이런 사람들</h3>
+
+<div class="story">
+  <div class="who">CASE 1</div>
+  <div>👴 <strong>65세 김철수 어르신</strong></div>
+  <div class="quote">"매일 PC방에서 6시간씩 e스포츠 게임을 하시고, 디스코드로 길드원들과 활발히 교류한다."</div>
+  <div class="reaction">→ 평범한 60대처럼 트로트 듣고 등산 가는 게 아니라 <strong>20대 게이머처럼 행동하는 60대</strong>. 모델이 이 사람을 잘 분류할까?</div>
+</div>
+
+<div class="story">
+  <div class="who">CASE 2</div>
+  <div>🧁 <strong>민호씨 (30대 남성)</strong></div>
+  <div class="quote">"30대 가정주부로 매일 아이 셋을 등원시키고 베이킹과 살림에 매진한다."</div>
+  <div class="reaction">→ 보통 stereotype상 "가정주부·베이킹·살림"은 여성과 연결되잖아요. 그런데 <strong>분명히 "민호씨"라고 남자 이름이 있는데</strong>, 모델은 누구로 분류할까?</div>
+</div>
+
+<p>이런 식으로 stereotype과 어긋나는 사람 6명을 만들어 모델에 넣어봤어요.</p>
+
+
+<!-- ============================================================ -->
+<h2 id="why"><span class="emoji">💡</span>2. 왜 했나 — 평균 점수만 보면 모르는 게 있어서</h2>
+
+<p>지금까지의 실험은 "평균적으로 모델이 얼마나 잘 맞춰?" 같은 거였어요. 예를 들어:</p>
+
+<div class="callout info">
+  "지명 다 가렸을 때도 모델이 광역시도를 <strong>74%</strong> 맞춤" → "와 stereotype이 진짜 많구나"
+</div>
+
+<p>이건 의미 있지만 한계가 있어요. <strong>"모델이 정확히 어디서 헷갈리는지", "어떤 단어에 약한지"</strong> 같은 디테일은 안 보여요. 그래서:</p>
+
+<div class="callout success">
+  <span class="big">💡 아이디어:</span>
+  일부러 모델을 헷갈리게 하는 "함정 페르소나"를 만들어서 모델이 어떻게 반응하는지 보자!<br><br>
+  → "60대인데 게이머", "남자인데 가정주부" 같은 케이스를 넣고 모델이 <strong>명시된 정보(나이·이름)</strong>를 따라가는지, 아니면 <strong>stereotype(게임·살림)</strong>에 끌려가는지 본다.
+</div>
+
+<h3>왜 이게 좋냐면</h3>
+
+<div class="grid-2">
+  <div class="callout">
+    <strong>① 모델 편향이 분명히 드러남</strong><br>
+    평범한 페르소나에서는 stereotype 따라가도 정답이라 안 보이는데, 충돌 페르소나에서는 stereotype에 끌리면 <strong>틀린 답</strong>으로 직접 보임.
+  </div>
+  <div class="callout">
+    <strong>② 발표 때 라이브 시연 가능</strong><br>
+    숫자(74%) 보여주는 것보다 "이 사람 한 명 보여줬더니 모델이 이렇게 잘못 답함" 시연이 훨씬 임팩트 큼.
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="how"><span class="emoji">🧪</span>3. 어떻게 했나 — 6명의 함정 페르소나</h2>
+
+<p>한국 사회에 흔한 stereotype 4가지(성별, 나이, 지역, 라이프스타일)를 각각 깨는 사람 6명을 만들었어요.</p>
+
+<div class="grid-3" style="margin-top:14px;">
+  <div class="persona">
+    <div class="title">🎮 60대 PC방 게이머</div>
+    <div class="desc">"65세 김철수 어르신, e스포츠 6시간/일"</div>
+    <div class="twist">👵 보통 60대 ≠ 🎮 PC방 게이머</div>
+  </div>
+  <div class="persona">
+    <div class="title">⚽ 축구광 30대 여성</div>
+    <div class="desc">"30세 박지영씨, EPL 광팬, 풋살 주장"</div>
+    <div class="twist">👩 보통 여성 ≠ ⚽ 풋살·EPL</div>
+  </div>
+  <div class="persona">
+    <div class="title">🎤 20대 트로트 광팬</div>
+    <div class="desc">"26세 김지수씨, 임영웅 열성팬"</div>
+    <div class="twist">🧑 보통 20대 ≠ 🎤 트로트·임영웅</div>
+  </div>
+  <div class="persona">
+    <div class="title">🏙️ 서울 강남 어부</div>
+    <div class="desc">"서울 강남 박여사, 갯벌·꼬막무침"</div>
+    <div class="twist">🏢 서울 ≠ 🌊 갯벌·꼬막</div>
+  </div>
+  <div class="persona">
+    <div class="title">🧁 남성 가정주부</div>
+    <div class="desc">"민호씨, 30대 가정주부, 베이킹·살림"</div>
+    <div class="twist">👨 보통 남성 ≠ 🧁 가정주부·베이킹</div>
+  </div>
+  <div class="persona">
+    <div class="title">🌾 70대 여성 게이머</div>
+    <div class="desc">"75세 이여사, 배틀그라운드, 트위치"</div>
+    <div class="twist">👵 보통 70대 ≠ 🎮 게이밍</div>
+  </div>
+</div>
+
+<p style="margin-top:16px;">각 페르소나를 두 모델(TextCNN, Hybrid)에 넣고 <strong>"성별이 뭐다, 나이가 몇 살대다, 어디 산다, 어떤 라이프스타일이다"</strong> 4가지를 예측하게 했어요.</p>
+
+
+<!-- ============================================================ -->
+<h2 id="result"><span class="emoji">📊</span>4. 결과 — 모델별로 완전히 다르게 답함</h2>
+
+<p>먼저 핵심부터:</p>
+
+<div class="tldr">
+  <span class="label">TL;DR</span><br>
+  ✓ <strong>TextCNN은 6명 다 성별 맞춤</strong> (잘 버팀)<br>
+  ✗ <strong>Hybrid는 6명 중 3명 성별 오판</strong> (stereotype에 휘둘림)<br><br>
+  → 평균 점수로 보면 두 모델 비슷한데, 충돌 페르소나로 시험하면 <strong>완전히 다른 성격</strong>이라는 게 드러남.
+</div>
+
+<h3>전체 결과 표</h3>
+
+<table class="data">
+  <thead>
+    <tr>
+      <th rowspan="2">페르소나</th>
+      <th rowspan="2">실제</th>
+      <th colspan="2">TextCNN</th>
+      <th colspan="2">Hybrid</th>
+    </tr>
+    <tr>
+      <th>성별</th><th>나이</th>
+      <th>성별</th><th>나이</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="label">🎮 60대 PC방 게이머</td>
+      <td>남 / 60s</td>
+      <td class="warn">남 (51%)</td>
+      <td class="good">60s ✓</td>
+      <td class="bad">여 ✗</td>
+      <td class="good">60s ✓</td>
+    </tr>
+    <tr>
+      <td class="label">⚽ 축구광 30대 여성</td>
+      <td>여 / 30s</td>
+      <td class="good">여 ✓</td>
+      <td class="good">30s ✓</td>
+      <td class="good">여 ✓</td>
+      <td class="good">30s ✓</td>
+    </tr>
+    <tr>
+      <td class="label">🎤 20대 트로트 광팬</td>
+      <td>여 / 20s</td>
+      <td class="good">여 ✓</td>
+      <td class="good">20s ✓</td>
+      <td class="bad">남 ✗</td>
+      <td class="good">20s ✓</td>
+    </tr>
+    <tr>
+      <td class="label">🏙️ 서울 강남 어부</td>
+      <td>여 / —</td>
+      <td class="good">여 ✓</td>
+      <td>30s</td>
+      <td class="good">여 ✓</td>
+      <td>60s</td>
+    </tr>
+    <tr>
+      <td class="label">🧁 남성 가정주부</td>
+      <td>남 / 30s</td>
+      <td class="good">남 ✓</td>
+      <td class="good">30s ✓</td>
+      <td class="bad">여 ✗</td>
+      <td class="good">30s ✓</td>
+    </tr>
+    <tr>
+      <td class="label">🌾 70대 여성 게이머</td>
+      <td>여 / 70+</td>
+      <td class="good">여 ✓</td>
+      <td class="good">70+ ✓</td>
+      <td class="good">여 ✓</td>
+      <td class="bad">50s ✗</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>빨간 칸이 <strong>모델이 stereotype에 끌려 틀린 답</strong>을 한 곳이에요. Hybrid한테 빨간 칸이 4개나 있어요.</p>
+
+
+<!-- ============================================================ -->
+<h2 id="case"><span class="emoji">🔬</span>5. 인상적인 케이스 — 사례로 보기</h2>
+
+<h3>📌 케이스 A — "민호씨, 30대 가정주부" (가장 인상적)</h3>
+
+<div class="story">
+  <div class="who">함정 페르소나</div>
+  <div class="quote">"<strong>민호씨</strong>는 30대 가정주부로 매일 아이 셋을 등원시키고 <strong>베이킹과 살림</strong>에 매진한다. 요리 블로그를 운영한다..."</div>
+</div>
+
+<p>"민호씨"라고 이름까지 있고 30대 가정주부라고 했으니 분명히 <strong>남성</strong>이죠. 그런데:</p>
+
+<div class="grid-2">
+  <div class="callout success">
+    <strong>TextCNN</strong> → 남자 ✓ (82% 확신)<br>
+    👍 잘 맞춤. 이름 "민호"를 따라간 듯.
+  </div>
+  <div class="callout danger">
+    <strong>Hybrid</strong> → 여자 ✗ (<strong>90% 확신</strong>)<br>
+    👎 90%로 강하게 잘못 답함. "베이킹·살림" stereotype에 압도됨.
+  </div>
+</div>
+
+<div class="callout">
+  <span class="big">😲 사람이라면?</span>
+  "민호씨면 당연히 남자지" 라고 자연스럽게 알 것 같은데, 모델은 "베이킹"·"살림" 단어 보고 "여자다!" 라고 90%로 확신해버려요. 이게 stereotype이 모델 안에 얼마나 깊이 박혀있는지 보여주는 케이스예요.
+</div>
+
+<h3>📌 케이스 B — "65세 어르신, PC방 게이머" (가장 헷갈림)</h3>
+
+<div class="story">
+  <div class="who">함정 페르소나</div>
+  <div class="quote">"<strong>65세 김철수 어르신</strong>은 매일 <strong>PC방에서 6시간씩 e스포츠 게임</strong>을 하시고, 디스코드로 길드원들과 활발히 교류한다..."</div>
+</div>
+
+<p>분명히 65세 김철수 "어르신"이니까 남성이죠. 그런데:</p>
+
+<div class="grid-2">
+  <div class="callout">
+    <strong>TextCNN</strong> → 남자 ✓ <strong>(51%)</strong><br>
+    🤔 거의 동전던지기 수준. "남자다" 답은 맞췄지만 확신 거의 없음.
+  </div>
+  <div class="callout danger">
+    <strong>Hybrid</strong> → 여자 ✗ (97% 확신)<br>
+    👎 또 여자라고 거의 100%로 잘못 답함.
+  </div>
+</div>
+
+<div class="callout info">
+  <span class="big">🎯 TextCNN의 51%가 흥미로워요</span>
+  TextCNN이 "남자 51%, 여자 49%"라고 답한 건 거의 <strong>동전던지기 수준</strong>. 모델이 "어르신·김철수"(남성 신호) vs "PC방·게임"(stereotype은 젊은 남성/모호) 사이에서 갈피를 못 잡고 있다는 거예요.<br><br>
+  → 모델이 헷갈릴 때 "헷갈린다"고 정직하게 표현하는 게 오히려 좋은 점. Hybrid는 헷갈려도 97% 확신으로 잘못 답하는데, TextCNN은 51%로 "잘 모르겠다"고 알려줘요.
+</div>
+
+<h3>📌 케이스 C — "트로트 광팬 → 모델이 경상북도라고 답함" (가장 놀라움)</h3>
+
+<div class="story">
+  <div class="who">함정 페르소나</div>
+  <div class="quote">"26세 김지수씨는 <strong>트로트 가수 임영웅의 열성팬</strong>이다. 매주 트로트 콘서트를 다니며..."</div>
+  <div class="reaction">⚠️ 텍스트에 <strong>지역 단어가 단 하나도 없어요</strong>. 서울, 부산, 어디라고 한 마디도 안 했어요.</div>
+</div>
+
+<p>그런데 Hybrid 모델은 이 사람의 거주 지역을 <strong>경상북도</strong>라고 예측했어요.</p>
+
+<div class="callout danger">
+  <span class="big">🤯 왜 경상북도?</span>
+  <strong>임영웅이 경상북도 포항 출신이거든요.</strong> 모델이 학습하면서 "임영웅 → 포항 → 경북"이라는 stereotype을 자동으로 외운 거예요. 이 사람이 임영웅 팬이라는 이유 하나로 "경북 사람일거야" 라고 추론한 거죠.<br><br>
+  → 텍스트에 지역 단어가 한 글자도 없는데 <strong>가수 이름 하나만으로 거주지를 추론</strong>하다니, stereotype이 모델 안에 얼마나 깊이 박혔는지 보여주는 가장 강력한 사례.
+</div>
+
+<h3>📌 케이스 D — "75세 여성 게이머 → 50대라고 함" (나이까지 흔들림)</h3>
+
+<div class="story">
+  <div class="who">함정 페르소나</div>
+  <div class="quote">"<strong>75세 이여사</strong>는 매일 <strong>PC방에서 배틀그라운드</strong>를 플레이하고, 트위치에서 게이밍 방송을 자주 본다..."</div>
+</div>
+
+<p>"75세"라고 분명히 적혀있는데, Hybrid는 이 사람을 <strong>50대</strong>로 92% 확신으로 예측. TextCNN은 70+로 정확히 맞춤.</p>
+
+<div class="callout danger">
+  <span class="big">🎮 게임 = 젊음 stereotype</span>
+  "PC방·배틀그라운드·트위치" 같은 게이밍 키워드가 모델 안에서 "젊은 사람" 신호를 너무 강하게 활성화시켜요. 그래서 텍스트에 "75세"라는 명백한 숫자가 있는데도 "에이 이 사람 50대일거야" 라고 답해버린 거예요.<br><br>
+  → 보통 나이 task는 텍스트에 적힌 숫자만 보면 거의 100% 맞춰요(다른 5 케이스 다 100%). 그런데 이 케이스만 무너진 게 <strong>stereotype의 위력을 보여주는 증거</strong>.
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="why-hybrid"><span class="emoji">🤷</span>6. 왜 Hybrid가 더 휘둘리나</h2>
+
+<p>같은 데이터로 같이 학습했는데 왜 Hybrid만 stereotype에 약할까? 모델 구조 때문이에요.</p>
+
+<div class="grid-2">
+  <div class="callout success">
+    <strong>TextCNN — "가장 강한 신호 1개"만 채택</strong><br><br>
+    TextCNN은 문장을 훑으면서 <strong>가장 임팩트 강한 키워드 1개</strong>를 골라서 답해요. "민호씨"라는 강한 단서 하나가 있으면, "베이킹·살림"이 여러 개 있어도 "민호씨"가 가장 강하면 그것만 따라감.<br><br>
+    → 강한 단서 하나에 집중하는 보수적 성격.
+  </div>
+  <div class="callout danger">
+    <strong>Hybrid — 모든 신호를 평균</strong><br><br>
+    Hybrid는 문장 전체의 <strong>평균적인 분위기</strong>를 따라요. "베이킹·살림·요리·뜨개질" 같이 stereotype 키워드가 4-5개 있으면 평균이 "여성"쪽으로 기울어버림. 명시적 단서 "민호씨" 하나는 평균에 묻혀버려요.<br><br>
+    → 많은 신호들의 평균에 끌리는 성격 → stereotype에 약함.
+  </div>
+</div>
+
+<div class="callout">
+  <span class="big">🍱 비유로 말하면</span>
+  <strong>TextCNN은 단호한 친구</strong> — "민호라잖아, 그럼 남자지" 한 마디로 결정.<br>
+  <strong>Hybrid는 분위기 보는 친구</strong> — "근데 베이킹하고 살림하고 뜨개질하고... 음~ 여자 같은데?" 라며 키워드 분위기에 끌림.<br><br>
+  두 친구 다 평균 시험 점수는 비슷한데, <strong>이상한 사람이 나타나면 반응이 완전 달라요</strong>.
+</div>
+
+
+<!-- ============================================================ -->
+<h2 id="wrap"><span class="emoji">✨</span>7. 한 줄 정리</h2>
+
+<div class="callout">
+  <span class="big">📌 우리가 발견한 것</span>
+  <ul style="margin: 8px 0 0 0;">
+    <li><strong>stereotype과 어긋나는 사람 6명</strong>을 모델에게 보여줬더니</li>
+    <li><strong>TextCNN은 6/6 성별 정답</strong>, 잘 버텼어요</li>
+    <li><strong>Hybrid는 6명 중 3명 성별 오판</strong>, stereotype에 끌렸어요</li>
+    <li>평균 점수표(둘 다 75점대)에서는 안 보이던 차이가 충돌 페르소나에서 분명히 드러남</li>
+  </ul>
+</div>
+
+<div class="callout info">
+  <span class="big">💎 발표 임팩트가 큰 이유</span>
+  "Masked+Geo 조건에서 광역시도 74%"라는 숫자보다, "<strong>임영웅 팬이라는 이유로 경상북도라고 답함</strong>" 같은 구체적 사례가 훨씬 인상적이에요. 청중이 한 번에 이해하고 기억해요.
+</div>
+
+<div class="callout" style="background:linear-gradient(135deg,#DB2777,#7C3AED); color:#fff; border-left:none;">
+  <span class="big" style="color:#fff;">🎯 결론</span>
+  LLM이 만든 페르소나는 한국 사회 stereotype을 깊이 인코딩하고 있고, 그걸 학습한 우리 모델(특히 Hybrid)은 <strong>"민호씨"라는 명백한 남성 이름이 있어도 베이킹 단어 보고 여자라고 90%로 확신</strong>해버려요. <br><br>
+  → 평균 점수표는 모델 성능만 알려주지만, 충돌 페르소나는 <strong>모델의 "성격"과 "편향의 작동 방식"</strong>까지 노출해요.
+</div>
+
+<footer>Nemotron-Personas-Korea 100k · raw 조건 · 6 프리셋 × 2 모델</footer>
+
+</article>
+
+</div>
+
+</body>
+</html>

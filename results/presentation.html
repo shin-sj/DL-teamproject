@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>한국어 페르소나 분류 — 실험 설명</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F8FAFC;
+  --paper: #FFFFFF;
+  --ink: #0F172A;
+  --ink-soft: #334155;
+  --ink-muted: #64748B;
+  --rule: #E2E8F0;
+  --soft: #F1F5F9;
+  --accent: #1E40AF;
+  --accent-soft: #3B82F6;
+  --sex: #DB2777;
+  --age: #0891B2;
+  --prov: #7C3AED;
+  --life: #059669;
+  --red: #DC2626;
+  --green: #059669;
+  --amber: #D97706;
+  --tag: #E0E7FF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Pretendard', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.65;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 48px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+/* sticky TOC */
+.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  font-size: 13px;
+  line-height: 1.8;
+  border-left: 2px solid var(--rule);
+  padding-left: 16px;
+}
+.toc .toc-title { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.toc a {
+  display: block;
+  color: var(--ink-muted);
+  text-decoration: none;
+  padding: 2px 0;
+}
+.toc a:hover { color: var(--accent); }
+.toc a.sub { padding-left: 12px; font-size: 12px; }
+
+article { min-width: 0; }
+
+.hero {
+  background: linear-gradient(135deg, #1E40AF 0%, #6D28D9 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 40px 44px;
+  margin-bottom: 40px;
+}
+.hero .eyebrow { font-size: 12px; color: #C7D2FE; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.hero h1 { font-size: 32px; font-weight: 700; margin: 8px 0 14px; letter-spacing: -.02em; line-height: 1.25; }
+.hero p { font-size: 15px; color: #DBEAFE; line-height: 1.65; }
+.hero .meta { margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #C7D2FE; }
+
+h2 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin: 56px 0 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  padding-top: 24px;
+}
+h2:first-of-type { border-top: none; padding-top: 0; }
+h2 .num {
+  display: inline-block;
+  width: 28px; height: 28px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 28px;
+  margin-right: 10px;
+  vertical-align: 2px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+h3 { font-size: 17px; font-weight: 600; margin: 28px 0 10px; color: var(--ink); }
+h4 { font-size: 14px; font-weight: 600; margin: 18px 0 6px; color: var(--ink-soft); }
+
+p { font-size: 15px; color: var(--ink-soft); margin-bottom: 12px; }
+p strong { color: var(--ink); }
+
+ul { padding-left: 20px; margin-bottom: 12px; color: var(--ink-soft); font-size: 15px; line-height: 1.8; }
+ul li strong { color: var(--ink); }
+
+.subtitle { color: var(--ink-muted); font-size: 14px; margin: 6px 0 14px; }
+
+code, .mono { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: var(--soft); padding: 2px 6px; border-radius: 4px; }
+
+.callout {
+  background: #FEF3C7;
+  border-left: 4px solid var(--amber);
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 14px 0;
+}
+.callout.success { background: #D1FAE5; border-left-color: var(--green); }
+.callout.danger  { background: #FEE2E2; border-left-color: var(--red); }
+.callout.info    { background: #DBEAFE; border-left-color: var(--accent); }
+.callout strong { color: var(--ink); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.card h4 { margin-top: 0; font-size: 14px; color: var(--accent); }
+.card p { font-size: 13px; margin-bottom: 0; }
+.card.sex   { border-top: 3px solid var(--sex); }
+.card.age   { border-top: 3px solid var(--age); }
+.card.prov  { border-top: 3px solid var(--prov); }
+.card.life  { border-top: 3px solid var(--life); }
+.card.sex  h4 { color: var(--sex); }
+.card.age  h4 { color: var(--age); }
+.card.prov h4 { color: var(--prov); }
+.card.life h4 { color: var(--life); }
+
+.example {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 13px;
+  line-height: 1.7;
+  font-family: 'JetBrains Mono', monospace;
+  margin: 10px 0;
+  overflow-x: auto;
+}
+.example .meta { color: var(--ink-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; font-family: 'Pretendard', sans-serif; }
+.mask { background: #FEE2E2; color: var(--red); padding: 0 4px; border-radius: 3px; font-weight: 600; }
+.geo  { background: #EDE9FE; color: var(--prov); padding: 0 4px; border-radius: 3px; font-weight: 600; }
+
+.diagram {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 10px 0;
+  color: var(--ink-soft);
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+  background: var(--paper);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+}
+table.data th, table.data td {
+  padding: 9px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+}
+table.data th { font-weight: 600; color: var(--ink); text-align: right; background: var(--soft); font-family: 'Pretendard', sans-serif; font-size: 13px; }
+table.data th:first-child, table.data td:first-child { text-align: left; font-family: 'Pretendard', sans-serif; }
+table.data tr.hl { background: #FEF3C7; }
+table.data td.best { font-weight: 700; color: var(--accent); }
+table.data td.bad { color: var(--red); font-weight: 600; }
+
+.bar-row { display: grid; grid-template-columns: 90px 1fr 50px; gap: 10px; align-items: center; margin-bottom: 5px; font-size: 12px; }
+.bar-bg { height: 18px; background: var(--soft); border-radius: 3px; overflow: hidden; }
+.bar { height: 100%; border-radius: 3px; }
+.bar.textcnn { background: var(--accent); }
+.bar.bilstm  { background: #94A3B8; }
+.bar.hybrid  { background: #A78BFA; }
+.bar-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-soft); }
+
+.metric {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.metric .label { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .04em; }
+.metric .value { font-size: 24px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+.metric .delta { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+.metric .delta.down { color: var(--red); }
+
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; font-size: 14px; color: var(--ink-soft); margin: 8px 0; }
+.kv dt { font-weight: 600; color: var(--ink); }
+
+.pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 14px 0;
+}
+.pipeline .box {
+  flex: 1;
+  min-width: 140px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  text-align: center;
+}
+.pipeline .box strong { display: block; color: var(--accent); margin-bottom: 4px; font-size: 13px; }
+.pipeline .box small { color: var(--ink-muted); font-size: 11px; display: block; margin-top: 4px; line-height: 1.4; }
+.pipeline .arrow { color: var(--ink-muted); font-weight: 700; align-self: center; font-size: 18px; }
+
+.checklist { font-size: 15px; line-height: 1.9; color: var(--ink-soft); list-style: none; padding-left: 0; }
+.checklist li { padding-left: 28px; position: relative; margin-bottom: 4px; }
+.checklist li::before {
+  content: '✓';
+  position: absolute; left: 0; top: 0;
+  color: var(--green); font-weight: 700; font-size: 17px;
+}
+.checklist li strong { color: var(--ink); }
+
+.tag {
+  display: inline-block;
+  background: var(--tag);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+
+footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-muted);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px; }
+  .toc { display: none; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .hero { padding: 24px; }
+  .hero h1 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- TOC -->
+<nav class="toc">
+  <div class="toc-title">목차</div>
+  <a href="#sec1">1. 한 줄 요약</a>
+  <a href="#sec2">2. 데이터셋</a>
+  <a href="#sec3">3. Masking 3 조건</a>
+  <a href="#sec4">4. 학습 셋업</a>
+  <a href="#sec5">5. 결과</a>
+  <a href="#sec5" class="sub">5-1. 전체 표</a>
+  <a href="#sec5b" class="sub">5-2. 모델 비교</a>
+  <a href="#sec5c" class="sub">5-3. Leakage</a>
+  <a href="#sec5d" class="sub">5-4. Stereotype 잔존</a>
+  <a href="#sec5e" class="sub">5-5. BiLSTM 약점</a>
+  <a href="#sec6">6. 결론</a>
+</nav>
+
+<article>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">DL 텀프로젝트</div>
+  <h1>한국어 페르소나 narrative로부터 인구통계 4-task 동시 예측 + Stereotype 누설 정량 측정</h1>
+  <p>TextCNN · BiLSTM · CNN-LSTM Hybrid를 동일 조건에서 비교하고, 텍스트의 직접 단서(나이 표현·지명·친족어)를 마스킹한 버전과 원본 버전 점수를 비교해 LLM이 한국 사회 고정관념을 narrative에 얼마나 인코딩하고 있는지 측정했다.</p>
+  <div class="meta">Nemotron-Personas-Korea 100k · seed=42 · RTX 3060 Ti · 총 9 실험 ≈ 25분</div>
+</section>
+
+
+<!-- 1 -->
+<h2 id="sec1"><span class="num">1</span>한 줄 요약 — 우리가 한 일</h2>
+<p>한국 사람을 묘사하는 텍스트(나이·직업·가족·취미 등 11개 문단)를 모델에게 보여주고, <strong>이 사람의 성별 · 나이대 · 사는 지역 · 라이프스타일을 맞춰보라</strong>고 시켰다. 그리고 맞추는 과정에서 모델이 <strong>"이 사람 60대래"</strong> 같은 직접 단서를 보고 베끼는 건지, 아니면 <strong>"트로트 듣는 걸 보니 60대 같네"</strong> 같이 한국 사회 고정관념(stereotype)을 이용해서 추론하는 건지를 분리해 측정했다.</p>
+
+<div class="grid-3" style="margin-top:14px;">
+  <div class="card">
+    <h4>① 모델 비교</h4>
+    <p>TextCNN, BiLSTM, CNN-LSTM Hybrid <strong>세 가지 모델 구조</strong>를 똑같은 조건에서 학습시켜 누가 한국어 페르소나에 가장 강한지 비교했다.</p>
+  </div>
+  <div class="card">
+    <h4>② 한 모델로 4가지 동시 예측</h4>
+    <p>성별·나이대·지역·라이프스타일을 따로따로 학습하지 않고, <strong>한 번에 다 풀게</strong> 했다. 모델 1개로 효율적이고, task끼리 도움도 됨.</p>
+  </div>
+  <div class="card">
+    <h4>③ 단서를 가려서 비교</h4>
+    <p>원본 / "60대" 같은 표현을 가린 버전 / 지명까지 가린 버전 <strong>3가지 조건으로 같은 실험을 반복</strong>해서 모델이 어떤 단어에 의존하고 있었는지 정량화.</p>
+  </div>
+</div>
+
+
+<!-- 2 -->
+<h2 id="sec2"><span class="num">2</span>데이터셋 — Nemotron-Personas-Korea</h2>
+<p>NVIDIA가 공개한 한국어 합성 페르소나 데이터셋. 통계청·대법원 등 한국 공공 통계 분포를 반영해 인구통계 속성을 먼저 설계하고, 그 위에서 LLM(gemma)이 11개 자연어 narrative를 생성한 합성 데이터다. 우리는 그 중 <code>seed=42</code> 버전의 100k 행을 사용한다 (라이프 매칭 실패 13행 drop → 99,987).</p>
+
+<h3>한 사람 예시</h3>
+<div class="grid-2">
+  <div>
+    <h4>정답 (모델이 맞춰야 함)</h4>
+    <div class="example" style="font-size:14px;">
+      sex      = "여자"
+      age      = 67
+      province = "전라남"
+    </div>
+  </div>
+  <div>
+    <h4>입력 narrative (11개 컬럼 중 일부)</h4>
+    <div class="example" style="font-size:13px; line-height:1.7;">"67세 김순자 <span class="mask">여사</span>는 <span class="geo">전라남도 무안군</span>의 갯벌 마을에서 평생을 살아오셨다. 남편을 일찍 보내고 <span class="mask">아들</span> 둘을 키우며 어촌계에서 일했고, 요즘은 <span class="mask">손주</span>들과 임영웅 콘서트 영상 보는 것이 낙이라고 한다..."</div>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>핵심 문제:</strong> 텍스트에 정답(지명·X대·친족어)이 직접 박혀있는 경우가 많다. 그냥 학습하면 모델은 stereotype을 배우는 게 아니라 <strong>글자를 베끼게 된다</strong>. 그래서 마스킹 실험으로 분리.
+</div>
+
+
+<!-- 3 -->
+<h2 id="sec3"><span class="num">3</span>Masking 3 조건 — 실험 설계의 핵심</h2>
+<p>"글자 복사로 맞춘 점수"와 "stereotype으로 맞춘 점수"를 분리하기 위해, 같은 학습을 <strong>3가지 텍스트 조건</strong>에서 반복한다.</p>
+
+<div class="grid-3">
+  <div>
+    <span class="tag">Raw</span>
+    <h4>원본 그대로</h4>
+    <div class="example" style="font-size:12px;">"<strong>67세</strong> 김순자 <strong>여사</strong>는 <strong>전라남도 무안군</strong>의 갯벌 마을에서 <strong>아들</strong> 둘을..."</div>
+  </div>
+  <div>
+    <span class="tag" style="background:#FEE2E2; color:var(--red);">Masked</span>
+    <h4>'X대' + 친족어 가림</h4>
+    <div class="example" style="font-size:12px;"><span class="mask">[AGE]</span> 김순자 <span class="mask">[FAM]</span>는 전라남도 무안군의 갯벌 마을에서 <span class="mask">[FAM]</span> 둘을..."</div>
+    <p style="font-size:12px; color:var(--ink-muted); margin-top:6px;">"X대" 정규식 + 친족어 15개 (아내/남편/아들/딸/엄마/.../언니/동생)</p>
+  </div>
+  <div>
+    <span class="tag" style="background:#EDE9FE; color:var(--prov);">Masked + Geo</span>
+    <h4>위 + 지명까지 가림</h4>
+    <div class="example" style="font-size:12px;"><span class="mask">[AGE]</span> 김순자 <span class="mask">[FAM]</span>는 <span class="geo">[GEO][GEO]</span>의 갯벌 마을에서 <span class="mask">[FAM]</span> 둘을..."</div>
+    <p style="font-size:12px; color:var(--ink-muted); margin-top:6px;">광역시도 17 + 시군구 252 모두 <code style="font-size:11px;">[GEO]</code>로</p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>해석법</strong><br>
+  · Raw → Masked 떨어진 점수 = "X대"·친족어가 정답에 기여한 양 (직접 단서)<br>
+  · Masked → +Geo 떨어진 점수 = 지명이 정답에 기여한 양 (직접 단서)<br>
+  · <strong>+Geo 조건의 남은 점수 = stereotype으로 모델이 추론한 양</strong> ← 우리가 측정하고 싶었던 것
+</div>
+
+
+<!-- 4 -->
+<h2 id="sec4"><span class="num">4</span>학습 셋업 — 9개 실험을 동일 조건에서</h2>
+
+<div class="grid-2">
+  <div>
+    <h4>공통 하이퍼파라미터</h4>
+    <dl class="kv">
+      <dt>Optimizer</dt><dd>AdamW (lr=1e-3, wd=1e-5)</dd>
+      <dt>Batch size</dt><dd>256</dd>
+      <dt>Max length</dt><dd>512 글자</dd>
+      <dt>Epochs</dt><dd>10 (patience=3 early stop)</dd>
+      <dt>Grad clip</dt><dd>max_norm=5.0</dd>
+      <dt>Loss</dt><dd>4 task CE 단순 합</dd>
+      <dt>Selection</dt><dd>val avg-macro-F1 최고 epoch</dd>
+      <dt>Eval</dt><dd>test 10k에서 macro-F1 + accuracy</dd>
+      <dt>GPU</dt><dd>RTX 3060 Ti 8GB</dd>
+    </dl>
+  </div>
+  <div>
+    <h4>한 epoch 흐름</h4>
+    <div class="diagram" style="font-size:11.5px;">for batch in train_loader:
+   x = batch["text"]            # [256, 512]
+   out = model(x)               # dict of 4 logits
+
+   loss = CE(out["sex"],  y_sex)
+        + CE(out["age"],  y_age)
+        + CE(out["prov"], y_prov)
+        + CE(out["life"], y_life)
+
+   loss.backward()
+   clip_grad(model, max=5.0)
+   optim.step()
+
+# epoch 끝
+val_metrics = evaluate(model, val_loader)
+if val_macro_f1_avg > best:
+    save_checkpoint(model)</div>
+  </div>
+</div>
+
+<div class="callout success">
+  9 실험 총 학습 시간 <strong>≈ 25분</strong>. 산출물: 체크포인트 9개 + 상세 JSON 9개 + summary JSON 3개.
+</div>
+
+
+<!-- 9 -->
+<h2 id="sec5"><span class="num">5</span>결과</h2>
+
+<h3>5-1. 전체 점수 — 9 실험의 avg macro-F1</h3>
+<p>4 task macro-F1의 평균 (높을수록 좋음). 모든 셀에서 <strong>TextCNN ≥ Hybrid > BiLSTM</strong>.</p>
+<table class="data">
+  <thead>
+    <tr><th>조건</th><th>TextCNN (361k)</th><th>BiLSTM (477k)</th><th>Hybrid (506k)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Raw</td>           <td class="best">77.46</td><td>73.40</td><td>75.35</td></tr>
+    <tr><td>Masked</td>        <td class="best">72.86</td><td>68.70</td><td>70.50</td></tr>
+    <tr><td>Masked + Geo</td>  <td class="best">66.86</td><td>59.95</td><td>62.32</td></tr>
+  </tbody>
+</table>
+<div class="grid-2" style="margin-top:14px;">
+  <div class="callout info">
+    <strong>관찰 1 — 모델 크기 ≠ 성능</strong><br>
+    Hybrid는 TextCNN보다 1.4배 큰데 전부 짐. "더 큰 모델이 좋다"는 거짓. <strong>데이터 구조에 맞는 모델</strong>이 좋다.
+  </div>
+  <div class="callout info">
+    <strong>관찰 2 — 조건 갈수록 점수 떨어짐</strong><br>
+    Raw → Masked → +Geo로 점수가 내려가는 건 <strong>모델이 그만큼 직접 단어를 보고 맞추고 있었다</strong>는 뜻. 얼마나 떨어지는지로 누설량 측정.
+  </div>
+</div>
+
+<h3 id="sec5b">5-2. 왜 TextCNN이 이겼는가 — task별 막대 (Raw 조건)</h3>
+
+<p>표만 보면 "그냥 TextCNN이 좋은 모델이라서" 같지만, 사실은 <strong>이 데이터의 성격</strong> 때문이다. 한국어 페르소나에서 정답을 결정하는 신호는 대부분 <strong>짧은 키워드 phrase 1~2개</strong>다 — 문장의 흐름이나 긴 문맥보다 "특정 단어 묶음이 어디든 한 번이라도 나오는가"가 더 중요하다.</p>
+
+<h4>같은 문장을 세 모델이 어떻게 보는지</h4>
+<p>예시: <em>"60대 후반의 김영자 여사는 ... 매일 새벽 갯벌에 나가 조개를 캐고 ... 트로트를 흥얼거린다 ..."</em></p>
+
+<div class="grid-3" style="margin-top:8px;">
+  <div class="card">
+    <h4>TextCNN — "스캐너"</h4>
+    <p>3·4·5글자 창문이 문장 전체를 훑으면서 "<strong>60대</strong>", "<strong>갯벌에</strong>", "<strong>트로트</strong>" 같은 결정적 키워드 묶음을 직접 발견. <strong>max-pool</strong>이 "가장 강한 응답 하나"만 뽑아 정답으로 직결.</p>
+  </div>
+  <div class="card">
+    <h4>BiLSTM — "독자(reader)"</h4>
+    <p>한 글자씩 순서대로 읽으며 머릿속에 누적. 512글자를 다 읽은 뒤 평균 내서 정답 결정. 중요 키워드가 다른 글자들 사이에 <strong>희석</strong>되기 쉬움.</p>
+  </div>
+  <div class="card">
+    <h4>Hybrid — "스캐너 → 독자"</h4>
+    <p>CNN이 한 번 압축한 시퀀스를 LSTM이 또 읽음. CNN 단계에서 키워드를 잡긴 잡는데, 뒤의 LSTM 평균 단계에서 다시 희석. <strong>1.4배 큰 모델인데도 짐</strong>.</p>
+  </div>
+</div>
+
+<div class="callout" style="margin-top:14px;">
+  <strong>핵심 차이는 마지막 풀링 방식.</strong><br>
+  · TextCNN = <strong>max pooling</strong> ("이 키워드가 어디 한 번이라도 강하게 나왔나?") → <em>존재 여부</em>에 강함<br>
+  · BiLSTM / Hybrid = <strong>mean pooling</strong> ("전체 평균 분위기는?") → 결정적 키워드 1개는 <em>희석되어 묻힘</em><br>
+  한국어 페르소나는 "여부"가 정답인 데이터라 max가 mean을 이긴 것.
+</div>
+
+<h4>성별 (2-class)</h4>
+<div class="bar-row"><span>TextCNN</span><div class="bar-bg"><div class="bar textcnn" style="width:98.81%"></div></div><span class="bar-val">98.81</span></div>
+<div class="bar-row"><span>BiLSTM</span> <div class="bar-bg"><div class="bar bilstm"  style="width:97.85%"></div></div><span class="bar-val">97.85</span></div>
+<div class="bar-row"><span>Hybrid</span> <div class="bar-bg"><div class="bar hybrid"  style="width:98.33%"></div></div><span class="bar-val">98.33</span></div>
+
+<h4>연령대 (6-class)</h4>
+<div class="bar-row"><span>TextCNN</span><div class="bar-bg"><div class="bar textcnn" style="width:94.13%"></div></div><span class="bar-val">94.13</span></div>
+<div class="bar-row"><span>BiLSTM</span> <div class="bar-bg"><div class="bar bilstm"  style="width:93.60%"></div></div><span class="bar-val">93.60</span></div>
+<div class="bar-row"><span>Hybrid</span> <div class="bar-bg"><div class="bar hybrid"  style="width:93.43%"></div></div><span class="bar-val">93.43</span></div>
+
+<h4>광역시도 (17-class) — <span style="color:var(--red);">BiLSTM이 가장 크게 뒤짐</span></h4>
+<div class="bar-row"><span>TextCNN</span><div class="bar-bg"><div class="bar textcnn" style="width:99.13%"></div></div><span class="bar-val">99.13</span></div>
+<div class="bar-row"><span>BiLSTM</span> <div class="bar-bg"><div class="bar bilstm"  style="width:89.00%"></div></div><span class="bar-val">89.00</span></div>
+<div class="bar-row"><span>Hybrid</span> <div class="bar-bg"><div class="bar hybrid"  style="width:96.41%"></div></div><span class="bar-val">96.41</span></div>
+
+<h4>라이프스타일 (8-class, weak label) — 전체적으로 낮음</h4>
+<div class="bar-row"><span>TextCNN</span><div class="bar-bg"><div class="bar textcnn" style="width:17.76%"></div></div><span class="bar-val">17.76</span></div>
+<div class="bar-row"><span>BiLSTM</span> <div class="bar-bg"><div class="bar bilstm"  style="width:13.13%"></div></div><span class="bar-val">13.13</span></div>
+<div class="bar-row"><span>Hybrid</span> <div class="bar-bg"><div class="bar hybrid"  style="width:13.21%"></div></div><span class="bar-val">13.21</span></div>
+
+<div class="callout success">
+  <strong>막대 읽는 법.</strong> task가 어려울수록(클래스 수가 많을수록) 모델 간 격차가 더 벌어진다.
+  성별(2-class)은 셋 다 98%대로 거의 동률 — 너무 쉬워서 차이가 안 남.
+  광역시도(17-class)에서야 BiLSTM이 89%로 무너지면서 max-pool의 장점이 분명해진다.
+</div>
+
+<h3 id="sec5c">5-3. Leakage Ablation — 프로젝트 핵심</h3>
+<p>TextCNN 기준. 마스킹으로 점수가 얼마나 떨어지는지가 곧 "어떤 단어가 정답을 누설했는가"의 정량 측정.</p>
+<table class="data">
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Raw</th>
+      <th>Masked</th>
+      <th>Δ (Raw→Masked)</th>
+      <th>Masked+Geo</th>
+      <th>Δ (Masked→+Geo)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>성별</td>
+      <td>98.81</td><td>98.43</td>
+      <td style="color:var(--ink-muted);">-0.38</td>
+      <td>98.48</td>
+      <td style="color:var(--ink-muted);">+0.05</td>
+    </tr>
+    <tr class="hl">
+      <td>연령대</td>
+      <td>94.13</td><td>77.35</td>
+      <td class="bad">-16.78</td>
+      <td>76.65</td>
+      <td style="color:var(--ink-muted);">-0.70</td>
+    </tr>
+    <tr class="hl">
+      <td>광역시도</td>
+      <td>99.13</td><td>98.99</td>
+      <td style="color:var(--ink-muted);">-0.14</td>
+      <td>74.47</td>
+      <td class="bad">-24.52</td>
+    </tr>
+    <tr>
+      <td>라이프</td>
+      <td>17.76</td><td>16.69</td>
+      <td style="color:var(--ink-muted);">-1.07</td>
+      <td>17.82</td>
+      <td style="color:var(--ink-muted);">+1.13</td>
+    </tr>
+  </tbody>
+</table>
+<div class="grid-2">
+  <div class="callout danger">
+    <strong>연령대 −16.78%p</strong> — "X대" 정규식 한 줄 가렸을 뿐인데 17%p 폭락. <strong>LLM이 페르소나에 "60대" 같은 문자열을 그대로 박아넣고 있었다는 증거.</strong>
+  </div>
+  <div class="callout danger">
+    <strong>광역시도 −24.52%p</strong> — 지명 가린 순간 99→74로 25%p 폭락. 모델이 "전남" 글자를 직접 복사하던 비중이 크다는 증거.
+  </div>
+</div>
+
+<h3 id="sec5d">5-4. Stereotype 잔존 — 남은 점수가 진짜 누설</h3>
+<p>직접 단서를 모두 가려도 TextCNN이 보여주는 점수. 이 점수가 곧 <strong>"narrative에서 stereotype 시그널로 모델이 추론한 양"</strong>이다.</p>
+<div class="grid-4">
+  <div class="metric" style="border-top:3px solid var(--sex);">
+    <div class="label">성별</div>
+    <div class="value">98.48</div>
+    <div class="delta down">vs Raw −0.33%p</div>
+  </div>
+  <div class="metric" style="border-top:3px solid var(--age);">
+    <div class="label">연령대</div>
+    <div class="value">76.65</div>
+    <div class="delta down">vs Raw −17.48%p</div>
+  </div>
+  <div class="metric" style="border-top:3px solid var(--prov);">
+    <div class="label">광역시도</div>
+    <div class="value">74.47</div>
+    <div class="delta down">vs Raw −24.66%p</div>
+  </div>
+  <div class="metric" style="border-top:3px solid var(--life);">
+    <div class="label">라이프</div>
+    <div class="value">17.82</div>
+    <div class="delta">변동 없음</div>
+  </div>
+</div>
+
+<div class="grid-2" style="margin-top:16px;">
+  <div class="card sex">
+    <h4>성별 98.48 (거의 손실 0)</h4>
+    <p>"축구→남성 92%, 육아·요리→여성 92%" 같은 직업·취미 stereotype에서 우회 학습. <strong>친족어를 가려도 안 사라짐.</strong></p>
+  </div>
+  <div class="card age">
+    <h4>연령대 76.65 (17%p 떨어졌어도 여전히 높음)</h4>
+    <p>"X대"는 사라졌지만 "은퇴", "온천 여행", "트로트", "임영웅" 같은 간접 단서로 모델이 추론.</p>
+  </div>
+  <div class="card prov">
+    <h4>광역시도 74.47 (random 5.9% / majority 26% 대비 압도)</h4>
+    <p>지명을 다 가려도 "갯벌", "한라봉", "막걸리", 사투리 같은 지역 stereotype 키워드로 추론.</p>
+  </div>
+  <div class="card life">
+    <h4>라이프 17.82 (사실상 변동 없음)</h4>
+    <p>weak label이라 baseline 자체가 낮음. 다음 단계: 클래스 머지 또는 weighted CE.</p>
+  </div>
+</div>
+
+<h3 id="sec5e">5-5. BiLSTM 약점 — 광역시도 task에서 가장 크게 무너짐</h3>
+<table class="data">
+  <thead>
+    <tr><th>모델</th><th>Raw F1</th><th>Masked+Geo F1</th><th>Δ (떨어진 양)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>TextCNN</td><td>99.13</td><td>74.47</td><td class="bad">-24.66</td></tr>
+    <tr><td>Hybrid</td> <td>96.41</td><td>64.70</td><td class="bad">-31.71</td></tr>
+    <tr class="hl"><td><strong>BiLSTM</strong></td><td>89.00</td><td>53.09</td><td class="bad"><strong>-35.92</strong></td></tr>
+  </tbody>
+</table>
+<div class="grid-2">
+  <div>
+    <h4>왜 BiLSTM이 더 크게 무너지나</h4>
+    <p>BiLSTM은 시퀀스 전체를 순서대로 읽어서 정보를 누적하므로, "전라남도" 같은 긴 지명을 하나의 시퀀스 패턴으로 통째로 외워두는 경향이 강함. 지명을 가리면 외워둔 패턴이 한꺼번에 사라져 점수가 폭락.</p>
+  </div>
+  <div>
+    <h4>왜 TextCNN은 더 잘 버티나</h4>
+    <p>TextCNN은 <strong>다양한 짧은 키워드들의 OR 조합</strong>으로 학습 — 지명 하나가 사라져도 "갯벌", "막걸리", "한라봉" 같은 보조 키워드로 보완 가능. 분산 표현의 robustness.</p>
+  </div>
+</div>
+
+
+<!-- 10 -->
+<h2 id="sec6"><span class="num">6</span>결론</h2>
+<p>이 실험에서 얻은 결과를 두 갈래로 정리할 수 있다 — <strong>모델에 대한 발견</strong>(인코더 비교)과 <strong>데이터에 대한 발견</strong>(LLM 페르소나의 stereotype 인코딩).</p>
+
+<h3 style="margin-top:20px;">모델에 대한 발견</h3>
+<ul class="checklist">
+  <li><strong>TextCNN ≥ Hybrid > BiLSTM</strong> — 3 조건 × 4 task = 12 셀 전부 같은 순서. 한국어 페르소나는 "긴 문맥의 흐름"보다 "결정적 키워드의 존재 여부"가 정답을 좌우하기 때문에, max-pool 기반 TextCNN이 mean-pool 기반 두 모델보다 일관되게 우세.</li>
+  <li><strong>모델 크기 ≠ 성능</strong> — Hybrid는 TextCNN보다 1.4배 큰데도 모든 task에서 짐. "<em>CNN feature를 LSTM에 또 넣으면 더 좋겠지</em>"라는 가설은 이 데이터에서는 거짓. <strong>데이터 구조에 맞는 모델</strong>이 큰 모델보다 중요하다는 교과서적 교훈을 실증.</li>
+  <li><strong>RNN 약점 실증</strong> — BiLSTM은 학습 시간 2배 느리고(184s vs 91s), 광역시도 task에서 가장 약함(89% vs 99%). 강의의 "<em>RNN은 시간축 병렬 불가 → Transformer가 RNN을 대체한 이유</em>" 메시지를 정량으로 확인.</li>
+</ul>
+
+<h3 style="margin-top:24px;">데이터에 대한 발견 — 프로젝트의 본 결론</h3>
+<ul class="checklist">
+  <li><strong>Leakage 정량 측정</strong> — "X대" 정규식 한 줄을 가렸을 뿐인데 연령대 -17%p, 지명을 가린 순간 광역시도 -25%p. EDA 단계에서 측정한 노출률(연령 60.9%, 지역 82.5%)이 모델 점수 변화로 그대로 재현됨. <strong>"단어 복사로 부풀려진 점수"의 크기를 처음으로 정량화.</strong></li>
+  <li><strong>Stereotype 인코딩 입증</strong> — 직접 단서(나이/지명/친족어)를 모두 가린 가장 깨끗한 baseline에서도 성별 98%, 연령대 77%, 광역시도 74%로 추론 가능. 이는 random(5.9%)·majority(26%)를 압도하는 수치로, <strong>"갯벌·트로트·임영웅·축구" 같은 stereotype 키워드만으로도 한국인의 demographic을 역추론할 수 있음</strong>을 뜻한다. 즉 LLM이 합성한 페르소나는 한국 사회 고정관념을 narrative 깊은 곳에 인코딩하고 있다.</li>
+  <li><strong>방법론적 기여</strong> — 단순히 "stereotype이 있다"고 주장하는 데 그치지 않고, <strong>마스킹 전후 비교</strong>로 "글자 복사로 맞춘 점수"와 "진짜 stereotype으로 맞춘 점수"를 <strong>분리해서 측정</strong>하는 절차를 제시. 다른 합성 데이터셋·다른 언어에도 그대로 적용 가능한 평가 프레임워크.</li>
+</ul>
+
+<div class="callout" style="background:linear-gradient(135deg,#1E40AF,#6D28D9); color:#fff; border-left:none; margin-top:20px;">
+  <strong>한 줄 결론.</strong> LLM이 생성한 한국어 합성 페르소나는 한국 사회의 고정관념을 강하게 인코딩하고 있으며, 이를 학습 데이터로 사용하면 그 편향이 다운스트림 분류 모델로 전파된다. 우리는 이를 정량 측정했고, leakage를 통제하여 측정의 엄밀성을 확보했다.
+</div>
+
+
+<footer>Nemotron-Personas-Korea 100k · seed=42 · 9 실험 · RTX 3060 Ti</footer>
+
+</article>
+
+</div><!-- /.layout -->
+
+</body>
+</html>
